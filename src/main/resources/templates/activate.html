@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layout">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>激活页面</title>
+    <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        h4{
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+<div id="app"  class="container" layout:fragment="content">
+    <div v-if="activated">
+        <h4 class="center-align" >恭喜你🎉，账号激活成功!</h4>
+        <p class="center-align"><a th:href="@{/login}">点击前往登录界面</a></p>
+    </div>
+
+    <div v-else>
+        <h4 class="center-align" >激活码不存在😞,请重试...</h4>
+    </div>
+
+
+    <!--<p th:text="${#httpServletRequest.getParameter('key')}"></p>-->
+
+</div>
+
+
+
+<th:block layout:fragment="script">
+    <script th:src="@{~/js/vue.js}"></script>
+    <script th:src="@{~/js/axios.min.js}"></script>
+    <script th:inline="javascript">
+        new Vue({
+            el:'#app',
+            data:function () {
+                return{
+                    activated:false
+                }
+            },
+            mounted:function () {
+                //发起激活请求
+                var url=/*[[@{/api/activate}]]*/''
+                var key= /*[[${#httpServletRequest.getParameter('key')}]]*/''
+                debugger
+                var self=this
+                axios.get(url+"?key="+key)
+                    .then(function (response) {
+                        debugger
+                        console.log(response);
+                        if (response.status==200){
+                            Materialize.toast('激活成功',4000)
+                            self.activated=true
+                        }
+                    })
+                    .catch(function (error) {
+                        Materialize.toast('激活码不存在',4000)
+                        self.activated=false
+                        console.log(error);
+                    });
+            }
+        })
+
+    </script>
+</th:block>
+</body>
+</html>

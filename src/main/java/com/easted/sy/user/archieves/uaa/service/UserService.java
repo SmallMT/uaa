@@ -99,7 +99,12 @@ public class UserService {
         newUser.setLastName(lastName);
         newUser.setEmail(email);
         newUser.setImageUrl(imageUrl);
-        newUser.setLangKey(langKey);
+        if (langKey==null){
+            newUser.setLangKey("zh-cn"); //默认语言
+        }else {
+            newUser.setLangKey(langKey);
+
+        }
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key

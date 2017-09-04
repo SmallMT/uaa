@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        .card {
+            margin-top: 50px;
+        }
+
+        h3 {
+            margin: 50px;
+        }
+    </style>
+</head>
+<div id="app" class="container" layout:fragment="content">
+    <div class="row">
+        <div class="col s6 offset-s3">
+            <div class="card card-panel">
+
+                <blockquote>注册</blockquote>
+                <form v-on:submit.prevent="register">
+                    <div class="uk-form-row">
+                        <input class="uk-width-1-1 uk-form-large" type="text" placeholder="请输入登录用户名" name="username"
+                               v-model="registerData.login"/>
+                    </div>
+
+                    <div class="uk-form-row">
+                        <input class="uk-width-1-1 uk-form-large" type="password" placeholder="请输入登录密码" name="password"
+                               v-model="registerData.password"/>
+                    </div>
+                    <div>
+                        <input type="email" placeholder="请输入电子邮箱" name="email" v-model="registerData.email">
+                    </div>
+
+                    <!--验证码-->
+                    <div class="row">
+                        <div class="col s8"><input type="text" name="code" placeholder="请输入验证码"></div>
+                        <div class="col s3"><img src="" th:src="@{/randCode}" title="点我重新获取验证码"></div>
+                    </div>
+
+                    <p class="uk-text-danger" th:if="${param.code_error}">
+                        验证码输入错误
+                    </p>
+
+                    <p class="uk-text-danger" th:if="${param.pass_error}">
+                        用户名或密码错误
+                    </p>
+
+                    <p class="uk-text-success" th:if="${param.logout}">
+                        已登出
+                    </p>
+
+                    <div class="row">
+                        <div class="s4 col offset-s8">
+                            <button class="btn btn-block">注册</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--该页面自定义js-->
+<th:block layout:fragment="script">
+    <script th:src="@{~/js/vue.js}"></script>
+    <script th:src="@{~/js/axios.min.js}"></script>
+    <script th:inline="javascript">
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    msg: 'msg',
+                    registerData: {
+                        password: '',
+                        login: '',
+                        email: ''
+                    },
+
+                }
+            },
+            methods: {
+                register: function () {
+//                发起注册请求
+                    axios.post('http://localhost:9090/api/register', this.registerData)
+                        .then(function (response) {
+                            if (response.status == 201) {
+                                Materialize.toast('注册成功,已经向您的服务器发送激活链接，点击激活链接即可激活邮箱',4000)
+
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            Materialize.toast('注册失败',4000)
+                        });
+
+                }
+            }
+        })
+
+    </script>
+</th:block>
+</html>
+
+
+

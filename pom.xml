@@ -159,6 +159,16 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+        </dependency>
+
        <!--kaptcha-->
         <dependency>
             <groupId>com.github.axet</groupId>

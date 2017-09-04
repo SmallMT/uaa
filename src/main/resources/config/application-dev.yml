@@ -46,10 +46,13 @@ spring:
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
     mail:
-        host: localhost
-        port: 25
-        username:
-        password:
+        host: smtp.163.com
+        username: liuyatao1992@163.com
+        password: lyt@1025
+        properties:
+            mail.smtp.auth: true
+            mail.smtp.starttls.enable: true
+            mail.smtp.starttls.required: true
     messages:
         cache-seconds: 1
     thymeleaf:
@@ -105,8 +108,8 @@ jhipster:
             # security key (this key should be unique for your application, and kept secret)
             key: e0632b1831447033a8a63b9f2d8898d2b3502e45
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: UAA@localhost
-        base-url: http://127.0.0.1:8080
+        from: liuyatao1992@163.com
+        base-url: http://127.0.0.1:9090
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite: # Use the "graphite" Maven profile to have the Graphite dependencies

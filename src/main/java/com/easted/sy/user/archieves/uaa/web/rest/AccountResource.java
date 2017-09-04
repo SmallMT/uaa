@@ -74,14 +74,22 @@ public class AccountResource {
             return new ResponseEntity<>(CHECK_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
         return userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase())
+
             .map(user -> new ResponseEntity<>("login already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
+
             .orElseGet(() -> userRepository.findOneByEmail(managedUserVM.getEmail())
+
                 .map(user -> new ResponseEntity<>("email address already in use", textPlainHeaders, HttpStatus.BAD_REQUEST))
+
                 .orElseGet(() -> {
-                    User user = userService
-                        .createUser(managedUserVM.getLogin(), managedUserVM.getPassword(),
-                            managedUserVM.getFirstName(), managedUserVM.getLastName(),
-                            managedUserVM.getEmail().toLowerCase(), managedUserVM.getImageUrl(),
+
+                    User user = userService.createUser(
+                            managedUserVM.getLogin(),
+                        managedUserVM.getPassword(),
+                            managedUserVM.getFirstName(),
+                            managedUserVM.getLastName(),
+                            managedUserVM.getEmail().toLowerCase(),
+                            managedUserVM.getImageUrl(),
                             managedUserVM.getLangKey());
 
                     mailService.sendActivationEmail(user);
@@ -99,9 +107,15 @@ public class AccountResource {
     @GetMapping("/activate")
     @Timed
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
-        return userService.activateRegistration(key)
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+//        return userService.activateRegistration(key)
+//            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
+//            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        Optional<User> user=userService.activateRegistration(key);
+        if (user.isPresent()){
+            return  new ResponseEntity<String>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

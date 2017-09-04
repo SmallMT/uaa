@@ -1,14 +1,38 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layout">
+
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>首页</title>
+    <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
 </head>
 <body>
 
-<h1 th:text="${msg}"></h1>
-<!--登出-->
-<a th:href="@{/logout}">点击登出</a>
+
+<div  class="container" layout:fragment="content">
+    <div th:text="${#authentication.name}">
+        The value of the "name" property of the authentication object should appear here.
+    </div>
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+    发发发发发发付付付付付付付付付付付付付付
+</div>
+
+
+
 
 </body>
 </html>

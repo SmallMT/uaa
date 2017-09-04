@@ -6,6 +6,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.imageio.ImageIO;
@@ -82,5 +83,28 @@ public class AuthController {
 
     }
 
+    /**
+     * 注册界面
+     * @return
+     */
+    @RequestMapping(value = "/register",method = RequestMethod.GET)
+    public String register(){
+        return "register";
+    }
+
+    /**
+     * 激活界面
+     * @return
+     */
+    @RequestMapping(value = "/activate",method = RequestMethod.GET)
+    public String activate(){
+
+        return  "activate";
+    }
+
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    public String index(){
+        return "index";
+    }
 
 }

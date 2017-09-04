@@ -1,5 +1,6 @@
 package com.easted.sy.user.archieves.uaa.config;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,5 +23,10 @@ public class ThymeleafConfiguration {
         emailTemplateResolver.setCharacterEncoding(CharEncoding.UTF_8);
         emailTemplateResolver.setOrder(1);
         return emailTemplateResolver;
+    }
+
+    @Bean
+    public LayoutDialect layoutDialect() {
+        return new LayoutDialect();
     }
 }
