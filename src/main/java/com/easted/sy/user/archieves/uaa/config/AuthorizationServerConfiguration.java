@@ -71,7 +71,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception
 	{
-		clients.inMemory().withClient("demo")
+		clients.inMemory()
+            .withClient("demo")
             .secret("demo")
             .scopes("read","write")
             .redirectUris("http://localhost:8082/client/myInfor")
