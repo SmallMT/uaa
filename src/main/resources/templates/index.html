@@ -9,30 +9,223 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
+    <th:block layout:fragment="css">
+        <style>
+            #carousel-slider{
+                height: 200px;
+            }
+        </style>
+    </th:block>
+
     <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+
 </head>
 <body>
 
 
-<div  class="container" layout:fragment="content">
-    <div th:text="${#authentication.name}">
-        The value of the "name" property of the authentication object should appear here.
+<div layout:fragment="content">
+    <div id="page">
+        <!--广告滚动区-->
+        <!--<div id="carousel-slider" class="carousel carousel-slider center" data-indicators="true">-->
+            <!--<a class="carousel-item" href="#one!"><img src="https://lorempixel.com/800/400/food/1"></a>-->
+            <!--<a class="carousel-item" href="#two!"><img src="https://lorempixel.com/800/400/food/2"></a>-->
+            <!--<a class="carousel-item" href="#three!"><img src="https://lorempixel.com/800/400/food/3"></a>-->
+            <!--<a class="carousel-item" href="#four!"><img src="https://lorempixel.com/800/400/food/4"></a>-->
+
+        <!--</div>-->
+
+        <!--内容区-->
+        <div class="container">
+
+
+            <!--功能核心区-->
+            <div>
+                <blockquote>系统核心服务</blockquote>
+
+
+
+
+                <div class="row">
+
+                    <div class="col s4">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">办事进度</span>
+                            </div>
+                            <div class="card-content">
+                                <p>查看我的申请的各种事项的进度和结果</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击查看</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col s4">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">电子证照、附件</span>
+                            </div>
+                            <div class="card-content">
+                                <p>查看和自己有关的电子证照和电子附件</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击查看</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col s4">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">政务大数据</span>
+                            </div>
+                            <div class="card-content">
+                                <p>和我（的企业）有关的信息</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击查看</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="news">
+                <blockquote>新闻公告<a href="#!" style="float: right;">查看更多>></a></blockquote>
+                <div class="row">
+                    <div class="col m6 s1">
+                        <div class="collection">
+                            <a href="#!" class="collection-item"><span class="badge">1</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                            <a href="#!" class="collection-item"><span class="new badge">4</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                            <a href="#!" class="collection-item">Alan</a>
+                            <a href="#!" class="collection-item"><span class="badge">14</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                            <a href="#!" class="collection-item">Alan</a>
+                            <a href="#!" class="collection-item"><span class="badge">14</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                        </div>
+                    </div>
+                    <div class="col m6 s1">
+                        <div class="collection">
+                            <a href="#!" class="collection-item truncate"><span class="badge">工商</span>公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                            <a href="#!" class="collection-item"><span class="new badge">4</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                            <a href="#!" class="collection-item">Alan</a>
+                            <a href="#!" class="collection-item"><span class="badge">14</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                            <a href="#!" class="collection-item">Alan</a>
+                            <a href="#!" class="collection-item"><span class="badge">14</span>公告内容公告内容公告内容公告内容公告内容公告内容</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div id="apps">
+                <blockquote>其他服务应用</blockquote>
+
+                <div class="row">
+                    <div class="col s3">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">其他政务系统1</span>
+                            </div>
+                            <div class="card-content">
+                                <p>通过本系统授权可访问</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击进入</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col s3">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">其他政务系统2</span>
+                            </div>
+                            <div class="card-content">
+                                <p class="truncate">通过本系统授权可访问通过本系统授权可访问通过本系统授权可访问</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击进入</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col s3">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">其他政务系统3</span>
+                            </div>
+                            <div class="card-content">
+                                <p>通过本系统授权可访问</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击进入</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col s3">
+                        <div class="card small">
+                            <div class="card-image">
+                                <img src="images/sample-1.jpg" th:src="@{/img/sample-1.jpg}">
+                                <span class="card-title">其他政务系统4</span>
+                            </div>
+                            <div class="card-content">
+                                <p>通过本系统授权可访问</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="#">点击进入</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
     </div>
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
-    发发发发发发付付付付付付付付付付付付付付
 </div>
 
 
 
 
+
 </body>
+
+<!--自定义js-->
+<th:block layout:fragment="script">
+<script th:src="@{~/js/vue.js}"></script>
+<script th:src="@{~/js/axios.min.js}"></script>
+<script th:inline="javascript">
+       new Vue({
+           el:'#page',
+           data:function () {
+
+               return{
+                   msg:'mm'
+               }
+           },
+           methods:{
+
+           },
+           mounted:function () {
+
+               $('.carousel.carousel-slider').carousel({fullWidth: true});
+           }
+       })
+</script>
+
+</th:block>
 </html>

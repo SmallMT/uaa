@@ -8,6 +8,7 @@
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.26.3/css/uikit.gradient.min.css"/>-->
 
     <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+
     <style>
         .card{
             margin-top: 80px;
@@ -25,24 +26,36 @@
             flex: 1 0 auto;
         }
     </style>
+
+    <th:block layout:fragment="css"></th:block>
+
 </head>
 <body>
 
-<nav>
-    <div class="nav-wrapper">
-        <div class="container">
-            <a href="#" class="brand-logo">三亚市政务服务统一授权中心</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="" th:href="@{/logout}" sec:authorize="isAuthenticated()">退出</a></li>
-            </ul>
-        </div>
+<div class="navbar-fixed">
 
-    </div>
-</nav>
+    <nav>
+        <div class="nav-wrapper">
+            <div class="container">
+                <a href="#" th:href="@{~/}" class="brand-logo">三亚市政务服务统一授权中心</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <!--<li><a href="" th:href="@{/logout}" sec:authorize="isAuthenticated()"><span class="badge">14</span>消息</a></li>-->
+                    <li><a href="" sec:authorize="isAuthenticated()">消息 <span class="new badge" data-badge-caption="条未读">4</span></a></li>
+                    <li><a href="" th:href="@{/management}" sec:authorize="hasAnyRole('ROLE_ADMIN')">后台管理</a></li>
+                    <li><a href="" th:href="@{/logout}" sec:authorize="isAuthenticated()">退出</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</div>
+
+
 
 <main>
     <!--内容显示区-->
-    <div class="container" layout:fragment="content">
+    <div layout:fragment="content">
+
     </div>
 </main>
 
@@ -51,16 +64,22 @@
 <footer class="page-footer">
     <div class="container">
         <div class="row">
-            <div class="col l6 s12">
-                <h6 class="white-text">Footer Content</h6>
-            </div>
-            <!--<div class="col l4 offset-l2 s12">-->
-                <!--<h6 class="white-text">Links</h6>-->
-                <!--<ul>-->
-                    <!--<li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>-->
-                    <!--<li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>-->
-                <!--</ul>-->
+            <!--<div class="col l4 s12">-->
+                <!--<h6 class="white-text">Footer Content</h6>-->
             <!--</div>-->
+
+            <div class="col l4 s12">
+                <h6 class="white-text">联系方式</h6>
+                <ul>
+                    <li><a class="grey-text text-lighten-3" href="#!">地址：*****</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">客服电话：**</a></li>
+                </ul>
+            </div>
+            <div class="col l4 s12 offset-l4">
+
+                <h6 class="white-text">扫码关注</h6>
+                <img class="right-align" src="" height="120" with="120" th:src="@{/img/liantu.png}">
+            </div>
         </div>
     </div>
     <div class="footer-copyright">
@@ -78,6 +97,8 @@
 <!--materialize js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script th:src="@{~/js/materialize.min.js}" src="../static/js/materialize.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
 <!--每个页面自定义的js处-->
 <th:block layout:fragment="script"></th:block>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="management">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<div id="breadcrumbs" class="col s12" layout:fragment="managBreadcrumbs">
+    当前位置：
+    <a href="#" th:href="@{~/}">主页</a> >
+    <a href="#" th:href="@{/management}">后台管理</a> >
+    <a href="#" th:href="@{/management/clientManagement}">OAuth2客户端管理</a>
+
+
+</div>
+
+<div layout:fragment="managContent">
+    客户端管理
+</div>
+
+</body>
+</html>
