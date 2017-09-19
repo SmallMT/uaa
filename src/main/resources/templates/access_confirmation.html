@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>确认授权</title>
+    <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        .row {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div layout:fragment="content" class="container">
+
+
+    <div class="row">
+        <div class="col s6 offset-s3">
+            <h5 th:inline="text">您要授权[[${client.getClientId()}]]应用访问您的如下信息？</h5>
+
+            <form id="confirmationForm" name="confirmationForm"
+                  action="<%=request.getContextPath()%>/oauth/authorize"
+                  th:action="@{~/oauth/authorize}" method="post">
+
+                <input name="user_oauth_approval" value="true" type="hidden"/>
+
+
+                <div class='row' th:each="temp:${scopes}">
+                    <!--<div class="col s12 input-field">-->
+
+
+                        <p>
+                            <input class="filled-in" type="checkbox" id="test5" th:name="${temp.key}" th:id="${temp.key}" value="true" th:checked="true"/>
+                            <label for="test5" th:for="${temp.key}" th:text="${temp.key}">Red</label>
+                        </p>
+                        <!---->
+                        <!--<input type="checkbox" id="test5" th:name="${temp.key}" th:id="${temp.key}" value="true"  />-->
+                        <!--<label for="test5" th:for="${temp.key}" th:text="${temp.key}"  >Red</label>-->
+                    </div>
+                <!--</div>-->
+                <button class="btn btn-primary right" type="submit">授权</button>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

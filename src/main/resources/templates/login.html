@@ -1,71 +1,86 @@
 ﻿<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layout">
 <head>
-	<meta charset="UTF-8"/>
-	<title>登录</title>
-	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.26.3/css/uikit.gradient.min.css"/>-->
+    <meta charset="UTF-8"/>
+    <title>登录</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.26.3/css/uikit.gradient.min.css"/>-->
 
-	<link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
-	<style>
-		.card{
-			margin-top: 80px;
-		}
-		h3{
-			margin: 50px;
-		}
-	</style>
+    <link rel="stylesheet" href="../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        .card {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        h3 {
+            margin: 50px;
+        }
+    </style>
 </head>
 
+<body>
 <div layout:fragment="content">
-    <div class="container" >
 
-        <div class="row">
-            <div class="col s6 offset-s3">
-                <div class="card card-panel">
-                    <blockquote>登录</blockquote>
-                    <form  method="post" th:action="@{/authentication}">
-                        <div class="uk-form-row">
-                            <input class="uk-width-1-1 uk-form-large" type="text" placeholder="请输入用户名" name="username"/>
+    <div class="row">
+        <div class="col s6 offset-s3">
+            <div class="card card-panel">
+                <blockquote>登录</blockquote>
+                <form method="post" th:action="@{/authentication}">
+                    <div class="row">
+                        <div class="col s12 input-field">
+                            <input class="uk-width-1-1 uk-form-large" type="text" placeholder="请输入用户名" id="username" name="username"/>
+
+                            <label for="username">用户名</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12 input-field">
+                            <input class="uk-width-1-1 uk-form-large" type="password" placeholder="请输入密码" id="password" name="password"/>
+
+                            <label for="password">密码</label>
+                        </div>
+                    </div>
+
+
+                    <!--验证码-->
+                    <div class="row">
+                        <div class="col s8 input-field">
+                            <input type="text" name="code" placeholder="请输入验证码" id="code">
+                            <label for="code">验证码</label>
+                        </div>
+                        <div class="col s3"><img src="" th:src="@{/randCode}" title="点我重新获取验证码"></div>
+                    </div>
+
+                    <p class="uk-text-danger" th:if="${param.code_error}">
+                        验证码输入错误
+                    </p>
+
+                    <p class="uk-text-danger" th:if="${param.pass_error}">
+                        用户名或密码错误
+                    </p>
+
+                    <p class="uk-text-success" th:if="${param.logout}">
+                        已登出
+                    </p>
+
+                    <div class="row">
+                        <div class="s5 col">
+                            <a th:href="@{/register}">没有账号？点我注册</a>
                         </div>
 
-                        <div class="uk-form-row">
-                            <input class="uk-width-1-1 uk-form-large" type="password" placeholder="请输入密码" name="password"/>
+                        <div class="s4 col offset-s3">
+                            <button class="btn btn-block">登录</button>
                         </div>
-
-                        <!--验证码-->
-                        <div class="row">
-                            <div class="col s8"><input type="text" name="code" placeholder="请输入验证码"></div>
-                            <div class="col s3"><img src="" th:src="@{/randCode}" title="点我重新获取验证码"></div>
-                        </div>
-
-                        <p class="uk-text-danger" th:if="${param.code_error}">
-                            验证码输入错误
-                        </p>
-
-                        <p class="uk-text-danger" th:if="${param.pass_error}">
-                            用户名或密码错误
-                        </p>
-
-                        <p class="uk-text-success" th:if="${param.logout}">
-                            已登出
-                        </p>
-
-                        <div class="row">
-                            <div class="s5 col">
-                                <a th:href="@{/register}">没有账号？点我注册</a>
-                            </div>
-
-                            <div class="s4 col offset-s3">
-                                <button class="btn btn-block">登录</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
+
     </div>
 </div>
+</body>
 
 
 

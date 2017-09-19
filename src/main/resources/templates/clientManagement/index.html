@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth2 客户端管理</title>
+
+    <link rel="stylesheet" href="../../static/css/materialize.min.css">
+    <link rel="stylesheet" href="" th:href="@{/plugins/DataTables/datatables.css}">
+
+    <link rel="stylesheet" href="../../static/plugins/DataTables/Buttons-1.4.2/css/buttons.foundation.css" th:href="@{/plugins/DataTables/Buttons-1.4.2/css/buttons.foundation.min.css}">
+
+
+    <style>
+        #breadcrumbs {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div layout:fragment="content">
+
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/clientManagement}">OAuth2客户端管理</a>
+
+    </div>
+    <div class="card-panel">
+        <blockquote>操作区</blockquote>
+        <div class="row">
+            <div class="s12 m3">
+                <a class="btn" th:href="@{/clientManagement/add}">添加</a>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="card-panel">
+        <blockquote>数据显示</blockquote>
+
+        <table id="table_id" class="display">
+            <thead>
+            <tr>
+                <th>客户端名称</th>
+                <th>密码</th>
+                <th>授权类型</th>
+                <th>请求域</th>
+                <th>自动授权</th>
+                <th>跳转地址</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Row 1 Data 1</td>
+                <td>Row 1 Data 2</td>
+            </tr>
+            <tr>
+                <td>Row 2 Data 1</td>
+                <td>Row 2 Data 2</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+<!--本页面js-->
+<th:block layout:fragment="script">
+
+    <!--引入datatables的js-->
+    <script th:src="@{/plugins/DataTables/datatables.js}"></script>
+    <script th:src="@{/plugins/DataTables/Buttons-1.4.2/js/buttons.print.min.js}" src="../../static/plugins/DataTables/Buttons-1.4.2/js/buttons.print.js"></script>
+
+    <script th:src="@{/plugins/DataTables/Buttons-1.4.2/js/buttons.foundation.min.js}" src="../../static/plugins/DataTables/Buttons-1.4.2/js/buttons.foundation.js"></script>
+    <script th:inline="javascript">
+
+        var data = [
+            [
+                "客户端名称",
+                "密码",
+                "请求域",
+                "自动授权",
+                "2011/04/25",
+                "$3,120"
+            ],
+            [
+                "Garrett Winters",
+                "Director",
+                "Edinburgh",
+                "8422",
+                "2011/07/25",
+                "$5,300"
+            ]
+        ]
+        $(document).ready( function () {
+           var table= $('#table_id').DataTable({
+               language: {
+                   "sProcessing": "处理中...",
+                   "sLengthMenu": "显示 _MENU_ 项结果",
+                   "sZeroRecords": "没有匹配结果",
+                   "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                   "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                   "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                   "sInfoPostFix": "",
+                   "sSearch": "搜索:",
+                   "sUrl": "",
+                   "sEmptyTable": "表中数据为空",
+                   "sLoadingRecords": "载入中...",
+                   "sInfoThousands": ",",
+                   "oPaginate": {
+                       "sFirst": "首页",
+                       "sPrevious": "上页",
+                       "sNext": "下页",
+                       "sLast": "末页"
+                   },
+                   "oAria": {
+                       "sSortAscending": ": 以升序排列此列",
+                       "sSortDescending": ": 以降序排列此列"
+                   }
+               },
+               buttons: [
+                   'copy', 'excel', 'pdf'
+               ],
+               data:data,
+           })
+
+
+        } );
+    </script>
+</th:block>
+
+</body>
+</html>

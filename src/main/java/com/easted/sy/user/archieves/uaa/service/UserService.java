@@ -105,6 +105,7 @@ public class UserService {
             newUser.setLangKey(langKey);
 
         }
+        newUser.setVerified(false);
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key

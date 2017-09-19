@@ -8,6 +8,7 @@ import com.easted.sy.user.archieves.uaa.domain.User;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Column;
 import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.Set;
@@ -52,6 +53,38 @@ public class UserDTO {
     private Instant lastModifiedDate;
 
     private Set<String> authorities;
+
+    /**
+     * 微信号
+     */
+    @Column(name = "wechat")
+    private String weChat;
+
+    /**
+     * 身份证号
+     */
+    @Column(name = "identity")
+    private String identity;
+
+    /**
+     * 真实姓名
+     */
+    @Column(name = "name")
+    private String name;
+
+
+    /**
+     * 是否已实名认证
+     */
+    @Column(name = "verified")
+    private boolean verified=false;
+
+    /**
+     * 手机号码
+     */
+    @Column(name = "tel")
+    private String tel;
+
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -147,6 +180,26 @@ public class UserDTO {
 
     public Set<String> getAuthorities() {
         return authorities;
+    }
+
+    public String getWeChat() {
+        return weChat;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public String getTel() {
+        return tel;
     }
 
     @Override

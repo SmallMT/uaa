@@ -159,7 +159,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/favicon.ico", "/css/**", "/js/**", "/plugins/**", "/fonts/**", "/img/**").permitAll()
-            .antMatchers("/randCode","/login","/authentication","/register","/activate").permitAll()
+            .antMatchers("/randCode","/login","/authentication","/register","/processRegister","/activate").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()

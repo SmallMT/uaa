@@ -1,5 +1,6 @@
 package com.easted.sy.user.archieves.uaa.config;
 
+import com.easted.sy.user.archieves.uaa.repository.ClientDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,16 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import java.security.KeyPair;
@@ -25,6 +34,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private ClientDetailsRepository clientDetailsRepository;
 
 
 	@Bean
@@ -39,7 +51,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		return converter;
 	}
 
-	private DefaultTokenServices tokenServices(AuthorizationServerEndpointsConfigurer endpoints)
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
+    }
+
+
+    private DefaultTokenServices tokenServices(AuthorizationServerEndpointsConfigurer endpoints)
 	{
 		DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(endpoints.getTokenStore());
@@ -68,15 +86,38 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 //			.accessTokenConverter(accessTokenConverter());
 	}
 
+	@Bean
+    public ClientDetailsService getClientDetails(){
+
+	    return new ClientDetailsService() {
+            @Override
+            public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+                com.easted.sy.user.archieves.uaa.domain.ClientDetails clientDetails=clientDetailsRepository.findOne(clientId);
+                BaseClientDetails baseClientDetails= new BaseClientDetails(clientDetails.getAppId(),clientDetails.getResourceIds(),clientDetails.getScope(),clientDetails.getGrantTypes(),null,clientDetails.getRedirectUrl());
+                baseClientDetails.setClientSecret(clientDetails.getAppSecret());
+                return baseClientDetails;
+            }
+        };
+    };
+
+	@Bean
+	public ApprovalStore approvalStore(){
+	    TokenApprovalStore tokenApprovalStore=new TokenApprovalStore();
+	    tokenApprovalStore.setTokenStore(tokenStore());
+	  return   tokenApprovalStore;
+    }
+
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception
 	{
-		clients.inMemory()
-            .withClient("demo")
-            .secret("demo")
-            .scopes("read","write")
-            .redirectUris("http://localhost:8082/client/myInfor")
-            .authorizedGrantTypes("authorization_code","refresh_token","implicit","password","client_credentials")
-            .autoApprove(true);
+//		clients.inMemory()
+//            .withClient("demo")
+//            .secret("demo")
+//            .scopes("read","write")
+//            .redirectUris("http://localhost:8082/client/myInfor")
+//            .authorizedGrantTypes("authorization_code","refresh_token","implicit","password","client_credentials")
+//            .autoApprove(true);
+
+        clients.withClientDetails(getClientDetails());
 	}
 }

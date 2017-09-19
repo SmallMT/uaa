@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>添加OAuth2客户端</title>
+    <link rel="stylesheet" href="../../static/css/materialize.min.css">
+
+    <style>
+        #breadcrumbs {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/clientManagement}">OAuth2客户端管理</a> >
+        <a href="#" th:href="@{/clientManagement/add}">添加客户端</a>
+    </div>
+
+    <div class="card-panel">
+        <blockquote>添加客户端信息</blockquote>
+
+        <div class="row">
+            <form method="post" th:action="post">
+
+                <div class="col s4 offset-s4">
+
+                    <div class="row">
+                        <div class="col s12 input-field">
+                            <input id="appid" type="text">
+                            <label for="appid">appId/应用ID</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12 input-field">
+                            <select multiple id="grantTypes">
+                                <option value="1">authorization_code</option>
+                                <option value="2">refresh_token</option>
+                                <option value="3">implicit</option>
+                                <option value="3">password</option>
+                                <option value="3">client_credentials</option>
+                            </select>
+                            <label for="grantTypes">grantTypes/授权类型</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12 input-field">
+                            <input id="scope" type="text">
+                            <label for="scope">重定向地址</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12 input-field">
+                            <input type="checkbox" id="test5" />
+                            <label for="test5">Red</label>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!--本页面js-->
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('select').material_select();
+        });
+    </script>
+</th:block>
+</body>
+</html>

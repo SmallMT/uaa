@@ -26,9 +26,9 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://10.10.139.161:3306/UAA?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://localhost:3306/UAA?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
-        password: 123456
+        password: mypwd
         hikari:
             data-source-properties:
             cachePrepStmts: true
@@ -45,6 +45,8 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
+        hibernate:
+          ddl-auto: update
     mail:
         host: smtp.163.com
         username: liuyatao1992@163.com

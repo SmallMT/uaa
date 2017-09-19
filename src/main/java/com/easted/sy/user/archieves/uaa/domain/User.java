@@ -84,6 +84,42 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_date")
     private Instant resetDate = null;
 
+    /**
+     * 微信号
+     */
+    @Column(name = "wechat")
+    private String weChat;
+
+    /**
+     * 身份证号
+     */
+    @Column(name = "identity")
+    private String identity;
+
+    /**
+     * 真实姓名
+     */
+    @Column(name = "name")
+    private String name;
+
+
+    /**
+     * 是否已实名认证
+     */
+    @Column(name = "verified" ,nullable = false)
+    private Boolean verified=false;
+
+    /**
+     * 手机号码
+     */
+    @Column(name = "tel")
+    private String tel;
+
+
+
+
+
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -209,6 +245,50 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
         this.persistentTokens = persistentTokens;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public String getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(String weChat) {
+        this.weChat = weChat;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     @Override
