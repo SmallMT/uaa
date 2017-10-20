@@ -1,5 +1,9 @@
 package com.easted.sy.user.archieves.uaa.security;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerInitializedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 public class LoginAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {

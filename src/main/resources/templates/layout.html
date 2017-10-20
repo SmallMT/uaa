@@ -44,17 +44,19 @@
 
 <div class="navbar-fixed">
     <ul id="dropdown1" class="dropdown-content">
-        <li><a href="#!">我的账户<i class="material-icons">account_box</i></a></li>
+        <li><a href="#!" th:href="@{/myAccount}">我的账户</a></li>
         <li class="divider"></li>
-        <li><a href="#!">实名认证<i class="material-icons">verified_user</i></a></li>
+        <li><a href="#!" th:href="@{/myAccount/realName}">实名认证</a></li>
         <li class="divider"></li>
-        <li><a href="#!" th:href="@{/logout}" sec:authorize="isAuthenticated()">退出 <i class="material-icons">directions_run</i></a></li>
+        <li><a href="#!" th:href="@{/logout}" sec:authorize="isAuthenticated()">退出</a></li>
     </ul>
 
     <ul id="dropdown2" class="dropdown-content">
         <li><a href="#!" th:href="@{/userManagement}">用户管理</a></li>
         <li class="divider" ></li>
         <li><a href="#!" th:href="@{/clientManagement}">OAuth 2 客户端管理</a></li>
+        <li class="divider" ></li>
+        <!--<li><a href="#!" th:href="@{/realNameManagement}">实名认证管理</a></li>-->
     </ul>
 
     <nav>
@@ -62,12 +64,12 @@
             <div class="container">
                 <a href="#" th:href="@{~/}" class="brand-logo">三亚市政务服务统一授权中心</a>
 
-                <ul id="nav-mobile"  class="right hide-on-med-and-down">
+                <ul id="nav-mobile"  class="right">
                     <!--<li><a href="" th:href="@{/logout}" sec:authorize="isAuthenticated()"><span class="badge">14</span>消息</a></li>-->
                     <li><a href="" th:href="@{/login}" sec:authorize="!isAuthenticated()">登录</a></li>
-                    <li><a href="" sec:authorize="isAuthenticated()">消息 <span class="new badge" data-badge-caption="">4</span></a></li>
+                    <!--<li><a href="" sec:authorize="isAuthenticated()">消息 <span class="new badge" data-badge-caption="">4</span></a></li>-->
                     <li><a href="" th:href="@{/management}" class="dropdown-button" href="#!" data-constrainwidth="false" data-activates="dropdown2" sec:authorize="hasAnyRole('ROLE_ADMIN')">后台管理</a></li>
-                    <li><a class="dropdown-button" href="#!" sec:authorize="isAuthenticated()" data-constrainwidth="false" data-activates="dropdown1" th:inline="text">[[${#authentication.name}]]<span class="new badge grey" data-badge-caption="未认证"></span> <i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a class="dropdown-button" href="#!" sec:authorize="isAuthenticated()" data-constrainwidth="false" data-activates="dropdown1" th:inline="text">[[${#authentication.name}]] <i class="material-icons right">arrow_drop_down</i></a></li>
                 </ul>
             </div>
 

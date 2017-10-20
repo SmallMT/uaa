@@ -1,5 +1,8 @@
 package com.easted.sy.user.archieves.uaa;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
 import com.easted.sy.user.archieves.uaa.config.ApplicationProperties;
 import com.easted.sy.user.archieves.uaa.config.DefaultProfileUtil;
 
@@ -60,7 +63,7 @@ public class UaaApp {
      * @param args the command line arguments
      * @throws UnknownHostException if the local host name could not be resolved into an address
      */
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, AVException {
         SpringApplication app = new SpringApplication(UaaApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
@@ -68,6 +71,15 @@ public class UaaApp {
         if (env.getProperty("server.ssl.key-store") != null) {
             protocol = "https";
         }
+
+        /*短信接口服务*/
+        AVOSCloud.initialize("iej5bQfs0fnQ1jUiIoCRVNLS-gzGzoHsz","YjEaXzNDJpha3MRlNleVxuDF","IaB9AqJ8CDrrfx7ln6hlmYY2");
+        AVOSCloud.setDebugLogEnabled(true);
+
+//        AVObject testObject = new AVObject("TestObject");
+//        testObject.put("words","Hello World!");
+//        testObject.save();
+
         log.info("\n----------------------------------------------------------\n\t" +
                 "Application '{}' is running! Access URLs:\n\t" +
                 "Local: \t\t{}://localhost:{}\n\t" +

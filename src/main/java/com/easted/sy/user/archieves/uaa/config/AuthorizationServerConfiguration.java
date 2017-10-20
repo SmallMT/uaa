@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import java.security.KeyPair;
+import java.util.Arrays;
+import java.util.Optional;
 
 @EnableAuthorizationServer
 @Configuration
@@ -92,9 +94,15 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	    return new ClientDetailsService() {
             @Override
             public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-                com.easted.sy.user.archieves.uaa.domain.ClientDetails clientDetails=clientDetailsRepository.findOne(clientId);
+                Optional<com.easted.sy.user.archieves.uaa.domain.ClientDetails> clientDetailsOptional=clientDetailsRepository.findAllByAppId(clientId);
+                com.easted.sy.user.archieves.uaa.domain.ClientDetails clientDetails=clientDetailsOptional.get();
                 BaseClientDetails baseClientDetails= new BaseClientDetails(clientDetails.getAppId(),clientDetails.getResourceIds(),clientDetails.getScope(),clientDetails.getGrantTypes(),null,clientDetails.getRedirectUrl());
                 baseClientDetails.setClientSecret(clientDetails.getAppSecret());
+                String autoApproveScopes=clientDetails.getAutoApproveScopes();
+                if (autoApproveScopes!=null){
+                    baseClientDetails.setAutoApproveScopes(Arrays.asList(autoApproveScopes.split(",")));
+
+                }
                 return baseClientDetails;
             }
         };

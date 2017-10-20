@@ -160,6 +160,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/favicon.ico", "/css/**", "/js/**", "/plugins/**", "/fonts/**", "/img/**").permitAll()
             .antMatchers("/randCode","/login","/authentication","/register","/processRegister","/activate").permitAll()
+            .antMatchers("/clientManagement/clientDetails").authenticated()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()

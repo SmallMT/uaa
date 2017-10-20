@@ -5,6 +5,7 @@ import com.easted.sy.user.archieves.uaa.domain.User;
 import com.easted.sy.user.archieves.uaa.service.dto.UserDTO;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;

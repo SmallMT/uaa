@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="manageLayout">
 <head>
     <meta charset="UTF-8">
     <title>添加OAuth2客户端</title>
-    <link rel="stylesheet" href="../../static/css/materialize.min.css">
-
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css" th:href="@{~/css/bootstrap.min.css}">
+    <!--bootstrap select-->
+    <link rel="stylesheet" href="../../static/plugins/bootstrap-select-1.12.4/css/bootstrap-select.min.css"
+          th:href="@{~/plugins/bootstrap-select-1.12.4/css/bootstrap-select.min.css}">
     <style>
         #breadcrumbs {
             margin-top: 20px;
             margin-bottom: 20px;
+        }
+
+        select {
+            height: 120px;
         }
     </style>
 </head>
@@ -18,6 +24,12 @@
 
 
 <div layout:fragment="content">
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="@{~/}">首页</a></li>
+        <li><a href="#" th:href="@{/clientManagement}">OAuth2客户端管理</a></li>
+        <li class="active"><a href="#" th:href="@{__${#httpServletRequest.requestURI}__}">添加客户端</a></li>
+    </ol>
+
     <div id="breadcrumbs" class="col s12">
         当前位置：
         <a href="#" th:href="@{~/}">主页</a> >
@@ -25,61 +37,141 @@
         <a href="#" th:href="@{/clientManagement/add}">添加客户端</a>
     </div>
 
-    <div class="card-panel">
-        <blockquote>添加客户端信息</blockquote>
 
-        <div class="row">
-            <form method="post" th:action="post">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+            <form method="post" th:action="@{/clientManagement/addProcess}" th:object="${clientDetails}">
 
-                <div class="col s4 offset-s4">
+                <div class="form-group">
+                    <label for="appid">appId/应用ID</label>
+                    <input id="appid" type="text" th:field="*{appId}" class="form-control">
+                </div>
+                <div class="col s12" th:if="${#fields.hasErrors('appId')}">
+                    <p class="text-danger" th:errors="*{appId}"></p>
+                </div>
+                <div class="col s12" th:if="${result!=null}">
+                    <p class="text-danger" th:text="${result}"></p>
+                </div>
 
-                    <div class="row">
-                        <div class="col s12 input-field">
-                            <input id="appid" type="text">
-                            <label for="appid">appId/应用ID</label>
-                        </div>
+
+                <!--grantType-->
+                <div class="form-group">
+                    <label for="grantTypes" class="active">grantTypes/授权类型</label>
+                    <select class="selectpicker form-control" multiple size="5" id="grantTypes"
+                            th:field="*{grantTypes}">
+                        <option value="authorization_code">authorization_code</option>
+                        <option value="refresh_token">refresh_token</option>
+                        <option value="implicit">implicit</option>
+                        <option value="password">password</option>
+                        <option value="client_credentials">client_credentials</option>
+                    </select>
+                </div>
+
+                <div class="col s12" th:if="${#fields.hasErrors('grantTypes')}">
+                    <p class="text-danger" th:errors="*{grantTypes}"></p>
+                </div>
+
+
+                <!--scopes-->
+                <div class="form-group">
+                    <label for="grantTypes" class="active">scopes/作用域</label>
+                    <select class="selectpicker form-control" multiple id="scopes" th:field="*{scope}">
+                        <option value="read">read</option>
+                        <option value="write">write</option>
+                    </select>
+                </div>
+                <div class="col s12" th:if="${#fields.hasErrors('scope')}">
+                    <p class="text-danger" th:errors="*{scope}"></p>
+                </div>
+
+
+                <!--auto_approve_scopes-->
+                <div class="form-group">
+                    <label for="grantTypes" class="active">auto_approve_scopes/自动授权作用域</label>
+                    <select class="selectpicker form-control" multiple id="auto_approve_scopes"
+                            th:field="*{autoApproveScopes}">
+                        <option value="read">read</option>
+                        <option value="write">write</option>
+                    </select>
+                </div>
+                <div class="col s12" th:if="${#fields.hasErrors('autoApproveScopes')}">
+                    <p class="text-danger" th:errors="*{autoApproveScopes}"></p>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="redirectUrl">redirectUrl/重定向地址</label>
+                    <input id="redirectUrl" type="url" th:field="*{redirectUrl}" class="form-control">
+                </div>
+                <div class="col s12" th:if="${#fields.hasErrors('redirectUrl')}">
+                    <p class="text-danger" th:errors="*{redirectUrl}"></p>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="access_token_validity">access_token_validity/access token有效时间（ms）</label>
+                    <input id="access_token_validity" type="number" th:field="*{accessTokenValidity}"
+                           class="form-control">
+                </div>
+                <div class="col s12" th:if="${#fields.hasErrors('accessTokenValidity')}">
+                    <p class="text-danger" th:errors="*{accessTokenValidity}"></p>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="refresh_token_validity">refresh_token_validity/refresh token有效时间（ms）</label>
+                    <input id="refresh_token_validity" type="number" th:field="*{refreshTokenValidity}"
+                           class="form-control">
+                </div>
+                <div class="col s12" th:if="${#fields.hasErrors('refreshTokenValidity')}">
+                    <p class="text-danger" th:errors="*{refreshTokenValidity}"></p>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">保存</button>
+
+                <div class="row">
+                    <div class="col s12 input-field">
+
                     </div>
-
-                    <div class="row">
-                        <div class="col s12 input-field">
-                            <select multiple id="grantTypes">
-                                <option value="1">authorization_code</option>
-                                <option value="2">refresh_token</option>
-                                <option value="3">implicit</option>
-                                <option value="3">password</option>
-                                <option value="3">client_credentials</option>
-                            </select>
-                            <label for="grantTypes">grantTypes/授权类型</label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col s12 input-field">
-                            <input id="scope" type="text">
-                            <label for="scope">重定向地址</label>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col s12 input-field">
-                            <input type="checkbox" id="test5" />
-                            <label for="test5">Red</label>
-                        </div>
-                    </div>
-
                 </div>
             </form>
 
         </div>
     </div>
+
+
 </div>
 
 
 <!--本页面js-->
 <th:block layout:fragment="script">
+    <script th:src="@{~/plugins/bootstrap-select-1.12.4/js/bootstrap-select.min.js}"
+            src="../../static/plugins/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script th:src="@{~/plugins/bootstrap-select-1.12.4/js/i18n/defaults-zh_CN.min.js}"
+            src="../../static/plugins/bootstrap-select-1.12.4/js/i18n/defaults-zh_CN.min.js"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
-            $('select').material_select();
+
+            var autoApproveScopes = /*[[${clientDetails.autoApproveScopes}]]*/ ''
+
+            if (autoApproveScopes!=null){
+                $('#auto_approve_scopes').selectpicker('val', autoApproveScopes.split(","));
+            }
+
+            var scope=/*[[${clientDetails.scope}]]*/ ''
+
+            if (scope!=null){
+                $('#scopes').selectpicker('val',scope.split(","))
+            }
+
+            var grantTypes=/*[[${clientDetails.grantTypes}]]*/ ''
+
+            if (grantTypes!=null){
+                $('#grantTypes').selectpicker('val',grantTypes.split(","))
+
+            }
+
         });
     </script>
 </th:block>

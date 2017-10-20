@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定办件人</title>
+    <link rel="stylesheet" href="../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{/myAccount/bindEnterprise}">绑定企业信息</a> >
+        <a href="#" th:href="@{/myAccount/bindEnterprise/binded/bindAgent/{path}(path=${creditCode})}">绑定办件人</a> >
+        <a href="#" th:href="@{/myAccount/bindEnterprise/binded/bindAgent/{path}/binded (path=${creditCode})}">已绑定办件人</a>
+
+
+    </div>
+
+    <div class="card-panel">
+        <blockquote>已绑定的办件人</blockquote>
+
+        <table>
+            <thead>
+            <tr>
+                <th>编号</th>
+                <th>企业名称</th>
+                <th>办件人姓名</th>
+                <th>身份证号</th>
+                <th>联系电话</th>
+                <th>操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="bindAgent : ${bindAgentList}">
+                <tr>
+                    <td th:text="${bindAgent.getId()}"></td>
+
+                    <td th:text="${bindAgent.getBindEnterprise().getEnterpriseName()}"></td>
+                    <td th:text="${bindAgent.getUser().getName()}"></td>
+                    <td th:text="${bindAgent.getUser().getIdentity()}"></td>
+
+                    <td th:text="${bindAgent.getUser().getTel()}"></td>
+
+                    <td>
+                        <button class="btn unbind">解绑</button>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/js/jquery.cookie.js}" src="../../static/js/jquery.cookie.js"></script>
+    <script th:src="@{/plugins/layer/layer.js}"></script>
+    <script th:inline="javascript">
+        $(document).ready(function (){
+            $('.unbind').click(function () {
+                var $td = $(this).parents('tr').children('td');
+                var id =  $td.eq(0).text()
+
+
+                /*当前路径*/
+                var path=/*[[@{__${#httpServletRequest.requestURI}__/}]]*/ '';
+
+                var url=path+'processUnBindAgent'
+
+                /*ajax发起请求*/
+                $.ajax({
+                    contentType: 'application/json',
+                    url: url,
+                    type: 'POST',
+                    data: JSON.stringify({
+                        "id": id
+                    }),
+                    beforeSend: function (request) {
+                        request.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
+                    },
+                    success: function (data) {
+                        /*刷新页面*/
+                        location.reload()
+                    },
+                    error: function (data) {
+                        layer.msg('删除失败')
+
+                    }
+
+                })
+
+
+            })
+
+            $('.bindAgent').click(function () {
+                /*点击点击进入添加办件人页面*/
+                var path=/*[[@{/myAccount/bindEnterprise/binded/bindAgent/}]]*/ ''
+                var $td = $(this).parents('tr').children('td');
+                var creditCode=  $td.eq(1).text()
+                window.location.href=path+creditCode;
+
+
+            })
+        })
+    </script>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定办件人</title>
+    <link rel="stylesheet" href="../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{/myAccount/bindEnterprise}">绑定企业信息</a> >
+        <a href="#" th:href="@{/myAccount/bindEnterprise/binded}">已绑定企业</a>
+
+    </div>
+
+    <div class="card-panel">
+        <blockquote>已绑定的企业</blockquote>
+
+        <table>
+            <thead>
+            <tr>
+                <th>企业名称</th>
+                <th>统一社会信用代码</th>
+                <th>操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="bindEnterprise : ${bindEnterpriseList}">
+                <tr>
+                    <td th:text="${bindEnterprise.getEnterpriseName()}"></td>
+                    <td th:text="${bindEnterprise.getCreditCode()}"></td>
+                    <td>
+                        <button class="btn unbind">解绑</button>
+                        <button class="btn bindAgent">绑定办件人</button>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--本页面js-->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/jquery.cookie.js}" src="../../static/js/jquery.cookie.js"></script>
+    <script th:src="@{/plugins/layer/layer.js}"></script>
+    <script th:inline="javascript">
+        $(document).ready(function (){
+            $('.unbind').click(function () {
+                var $td = $(this).parents('tr').children('td');
+                var creditCode=  $td.eq(1).text()
+
+                /*ajax发起请求*/
+                $.ajax({
+                    contentType: 'application/json',
+                    url: /*[[@{/myAccount/bindEnterprise/binded/processUnBind}]]*/ '',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        "creditCode": creditCode
+                    }),
+                    beforeSend: function (request) {
+                        request.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
+                    },
+                    success: function (data) {
+                        /*刷新页面*/
+                        location.reload()
+                    },
+                    error: function (data) {
+                        layer.msg('删除失败')
+
+                    }
+
+                })
+
+
+            })
+
+            $('.bindAgent').click(function () {
+                /*点击点击进入添加办件人页面*/
+               var path=/*[[@{/myAccount/bindEnterprise/binded/bindAgent/}]]*/ ''
+                var $td = $(this).parents('tr').children('td');
+                var creditCode=  $td.eq(1).text()
+                window.location.href=path+creditCode;
+
+
+            })
+        })
+    </script>
+</th:block>
+</body>
+</html>

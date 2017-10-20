@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定企业信息</title>
+    <link rel="stylesheet" href="../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        p{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{~/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{~/myAccount/bindEnterprise}">绑定企业信息</a>
+
+    </div>
+
+    <div class="card-panel">
+        <blockquote>绑定企业信息</blockquote>
+
+
+
+        <form th:action="@{~/myAccount/processBindEnterprise}" th:object="${bindEnterpriseVM}" method="post">
+
+            <div class="row">
+                <div class="col s6 offset-s3 input-field">
+                    <input type="tel" id="registerID"  placeholder="请输入社会信用统一代码" th:field="*{creditCode}">
+                    <label for="registerID">社会信用统一代码</label>
+                </div>
+
+                <div class="col s6 offset-s3 " th:if="${#fields.hasErrors('creditCode')}" >
+                    <p th:errors="*{creditCode}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <input type="text" id="representative" placeholder="请输入企业名称" th:field="*{enterpriseName}">
+                    <label for="representative">企业名称</label>
+                </div>
+                <div class="col s6 offset-s3  " th:if="${#fields.hasErrors('enterpriseName')}" >
+                    <p th:errors="*{enterpriseName}"></p>
+                </div>
+
+                <!--<div class="col s6 offset-s3 input-field">-->
+                    <!--<input type="text" id="representativeIdentity" placeholder="请输入法人身份证ID">-->
+                    <!--<label for="representativeIdentity">法人身份证号码</label>-->
+                <!--</div>-->
+
+                <div class="col s6 offset-s3 input-field">
+                    <a class="right" th:href="@{/myAccount/bindEnterprise/binded}">点击查看已绑定企业</a>
+                </div>
+
+
+
+
+                <div class="col s6 offset-s3">
+                    <p th:text="${result}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <button class="btn right" type="submit">绑定</button>
+                </div>
+            </div>
+
+                <!--<div class="row">-->
+                <!--<div class="col s12 input-field">-->
+                <!--<p th:text="${result}"></p>-->
+                <!--<input class="btn" type="submit" value="提交" /> <input class="btn" type="reset" value="重置" />-->
+                <!--</div>-->
+                <!--</div>-->
+
+
+                <!--<p>Message: <input type="text" th:field="*{password}" /></p>-->
+
+                <!--<p>email: <input type="email" th:field="*{email}" /></p>-->
+
+
+                <!--<p><input type="submit" value="提交" /> <input type="reset" value="重置" /></p>-->
+
+        </form>
+
+        <!--<form th:action="@{~/myAccount/processBindEnterprise}" method="post" th:object="${registerVM}"></form>-->
+        <!--<div class="row">-->
+        <!--<div class="col s6 offset-s3 input-field">-->
+        <!--<input type="tel" id="registerID" placeholder="请输入社会信用统一代码"  >-->
+        <!--<label for="registerID">社会信用统一代码</label>-->
+        <!--</div>-->
+
+        <!--<div class="col s6 offset-s3 input-field">-->
+        <!--<input type="text" id="representative" placeholder="企业名称" th:field="*{username}">-->
+        <!--<label for="representative">法人姓名</label>-->
+        <!--</div>-->
+
+        <!--<div class="col s6 offset-s3 input-field">-->
+        <!--<input type="text" id="representativeIdentity" placeholder="请输入法人身份证ID">-->
+        <!--<label for="representativeIdentity">法人身份证号码</label>-->
+        <!--</div>-->
+
+        <!--<div class="col s6 offset-s3 input-field">-->
+        <!--<a class="right" th:href="@{/myAccount/bindAgent}">点击绑定办件人</a>-->
+        <!--</div>-->
+
+        <!--<div class="col s6 offset-s3 input-field">-->
+        <!--<button class="btn right" type="submit">绑定</button>-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+
+</body>
+</html>

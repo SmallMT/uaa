@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>进行实名认证</title>
+    <link rel="stylesheet" href="../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{/myAccount/realName}">实名认证</a>
+
+    </div>
+
+
+    <div class="card-panel">
+        <blockquote>实名认证</blockquote>
+        <form th:if="${realNameResult==null}" th:object="${realNameVM}" enctype="multipart/form-data" method="post"
+              th:action="@{/myAccount/realName/realNameProcess}">
+
+            <div class="row">
+                <div class="col s6 offset-s3 input-field">
+                    <input id="name" type="text" placeholder="请输入真实姓名" th:field="*{name}">
+                    <label for="name">真实姓名</label>
+                </div>
+
+                <div class="col s6 offset-s3" th:if="${#fields.hasErrors('name')}">
+                    <p th:errors="*{name}"></p>
+                </div>
+
+
+                <div class="col s6 offset-s3 input-field">
+                    <input id="identity" type="text" placeholder="请输入身份证号码" th:field="*{identity}">
+                    <label for="identity">身份证号码</label>
+                </div>
+
+                <div class="col s6 offset-s3" th:if="${#fields.hasErrors('identity')}">
+                    <p th:errors="*{identity}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 file-field input-field">
+                    <div class="btn">
+                        <span>选择文件</span>
+                        <input type="file" th:field="*{frontFile}" placeholder="正面">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="身份证正面">
+                    </div>
+                </div>
+
+                <div class="col s6 offset-s3" th:if="${#fields.hasErrors('frontFile')}">
+                    <p th:errors="*{frontFile}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 file-field input-field">
+                    <div class="btn">
+                        <span>选择文件</span>
+                        <input type="file" th:field="*{backFile}" placeholder="背面">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="身份证反面">
+                    </div>
+                </div>
+
+                <div class="col s6 offset-s3" th:if="${#fields.hasErrors('backFile')}">
+                    <p th:errors="*{backFile}"></p>
+                </div>
+
+
+                <div class="col s6 offset-s3 file-field input-field">
+                    <div class="btn">
+                        <span>选择文件</span>
+                        <input type="file" th:field="*{selfieFile}" placeholder="手持">
+
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="手持身份照">
+                    </div>
+                </div>
+
+
+                <div class="col s6 offset-s3" th:if="${#fields.hasErrors('selfieFile')}">
+                    <p th:errors="*{selfieFile}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <button class="btn right" type="submit">提交</button>
+                </div>
+
+            </div>
+        </form>
+
+
+        <!--实名认证已通过-->
+        <div class="row" th:if="${realNameResult}">
+            <div class="col s6 offset-s3">
+                <h5 class="center-align" th:inline="text">实名认证已经通过</h5>
+            </div>
+        </div>
+
+
+        <!--&lt;!&ndash;未实名认证&ndash;&gt;-->
+        <!--<div class="row" th:if="${realNameResult==null}">-->
+            <!--<div class="col s6 offset-s3">-->
+                <!--<h5 class="center-align" th:inline="text">未实名认证</h5>-->
+                <!--<p class="right-align"><a class="rebind" href="javascript:void(0)">点击进行实名认证</a></p>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+        <!--已提交等待审核-->
+        <div class="row" th:if="${isUpload==true&&realNameResult==null}">
+            <div class="col s6 offset-s3">
+                <h5 class="center-align" th:inline="text">已经提交实名认证信息，请耐心等候</h5>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

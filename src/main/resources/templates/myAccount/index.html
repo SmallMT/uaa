@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>我的账号</title>
+    <link rel="stylesheet" href="../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a>
+    </div>
+
+    <div class="card-panel">
+        <blockquote>我的账号信息</blockquote>
+        <div class="row">
+            <div class="col s6 offset-s3 input-field">
+                <a class="right" th:href="@{/myAccount/bindEnterprise}">企业法人？点我绑定企业信息</a>
+            </div>
+            <!--用户名-->
+            <div class="col s6 offset-s3 input-field">
+                <input type="text" id="login" readonly value="44" th:value="${login}">
+                <label for="login">登录名</label>
+            </div>
+
+            <!--密码-->
+
+            <!--<div class="col s6 offset-s3 input-field" >-->
+                <!--<input type="password" id="password" readonly value="739697044@qq.com" th:value="${password}">-->
+                <!--<label for="password">密码</label>-->
+            <!--</div>-->
+
+
+            <!--邮箱-->
+            <div class="col s6 offset-s3 input-field">
+                <input type="email" id="email" readonly value="739697044@qq.com" th:value="${email}">
+                <label for="email">电子邮箱</label>
+            </div>
+
+
+            <!--真实姓名-->
+            <div class="col  offset-s3 input-field" th:classappend="${(name!=null ? 's6' : 's4')}">
+                <input type="text" id="name" readonly th:value="${name}">
+                <label for="name">真实姓名</label>
+            </div>
+
+            <div class="col s2 input-field">
+                <a th:if="${name==null}" th:href="@{/myAccount/realName}">进行实名认证</a>
+            </div>
+
+            <!--身份证信息-->
+            <div class="col  offset-s3 input-field" th:classappend="${(name!=null ? 's6' : 's4')}">
+                <input type="text" id="identity" readonly  th:value="${identity}">
+                <label for="identity">身份证号码</label>
+            </div>
+
+            <div class="col s2 input-field">
+                <a th:if="${name==null}" th:href="@{/myAccount/realName}">进行实名认证</a>
+            </div>
+
+            <!--手机号码-->
+            <div class="col s4 offset-s3 input-field">
+                <input type="tel" id="tel" readonly th:value="${tel}">
+                <label for="tel">手机号码</label>
+            </div>
+
+            <div class="col s2 input-field">
+                <a th:if="${name==null}" th:href="@{/myAccount/bindTel}">绑定手机号码</a>
+                <a th:if="${name!=null}" th:href="@{/myAccount/bindTel}">重新绑定手机号码</a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

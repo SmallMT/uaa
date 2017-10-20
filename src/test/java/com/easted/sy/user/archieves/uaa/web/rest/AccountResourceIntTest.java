@@ -167,6 +167,8 @@ public class AccountResourceIntTest {
             "Joe",                  // firstName
             "Shmoe",                // lastName
             "joe@example.com",      // email
+            "17629100289",
+            "","",
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -196,6 +198,8 @@ public class AccountResourceIntTest {
             "Funky",                // firstName
             "One",                  // lastName
             "funky@example.com",    // email
+            "17629100289",
+            "","",
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -225,6 +229,8 @@ public class AccountResourceIntTest {
             "Bob",              // firstName
             "Green",            // lastName
             "invalid",          // email <-- invalid
+            "17629100289",
+            "","",
             true,               // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -254,6 +260,8 @@ public class AccountResourceIntTest {
             "Bob",              // firstName
             "Green",            // lastName
             "bob@example.com",  // email
+            "17629100289",
+            "","",
             true,               // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -283,6 +291,8 @@ public class AccountResourceIntTest {
             "Bob",              // firstName
             "Green",            // lastName
             "bob@example.com",  // email
+            "17629100289",
+            "","",
             true,               // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -313,6 +323,8 @@ public class AccountResourceIntTest {
             "Alice",                // firstName
             "Something",            // lastName
             "alice@example.com",    // email
+            "17629100289",
+            "","",
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -324,7 +336,8 @@ public class AccountResourceIntTest {
 
         // Duplicate login, different email
         ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), validUser.getLogin(), validUser.getPassword(), validUser.getFirstName(), validUser.getLastName(),
-            "alicejr@example.com", true, validUser.getImageUrl(), validUser.getLangKey(), validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate(), validUser.getAuthorities());
+            "alicejr@example.com",            "17629100289",   "","",
+            true, validUser.getImageUrl(), validUser.getLangKey(), validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate(), validUser.getAuthorities());
 
         // Good user
         restMvc.perform(
@@ -355,6 +368,8 @@ public class AccountResourceIntTest {
             "John",                 // firstName
             "Doe",                  // lastName
             "john@example.com",     // email
+            "17629100289",
+            "","",
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -366,7 +381,8 @@ public class AccountResourceIntTest {
 
         // Duplicate email, different login
         ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), "johnjr", validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
-            validUser.getEmail(), true, validUser.getImageUrl(), validUser.getLangKey(), validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate(), validUser.getAuthorities());
+            validUser.getEmail(),            "17629100289",   "","",
+            true, validUser.getImageUrl(), validUser.getLangKey(), validUser.getCreatedBy(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate(), validUser.getAuthorities());
 
         // Good user
         restMvc.perform(
@@ -396,6 +412,7 @@ public class AccountResourceIntTest {
             "Bad",                  // firstName
             "Guy",                  // lastName
             "badguy@example.com",   // email
+            "17629100289",   "","",
             true,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -461,7 +478,10 @@ public class AccountResourceIntTest {
             "not-used",          // login
             "firstname",                // firstName
             "lastname",                  // lastName
+            null,
             "save-account@example.com",    // email
+            "17629100289",   "","",
+
             false,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -506,7 +526,10 @@ public class AccountResourceIntTest {
             "not-used",          // login
             "firstname",                // firstName
             "lastname",                  // lastName
+            null,
             "invalid email",    // email
+            "17629100289",   "","",
+
             false,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -551,7 +574,10 @@ public class AccountResourceIntTest {
             "not-used",          // login
             "firstname",                // firstName
             "lastname",                  // lastName
+            null,
             "save-existing-email2@example.com",    // email
+            "17629100289",   "","",
+
             false,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey
@@ -589,7 +615,10 @@ public class AccountResourceIntTest {
             "not-used",          // login
             "firstname",                // firstName
             "lastname",                  // lastName
+            null,
             "save-existing-email-and-login@example.com",    // email
+            "17629100289",   "","",
+
             false,                   // activated
             "http://placehold.it/50x50", //imageUrl
             "en",                   // langKey

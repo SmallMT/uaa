@@ -151,6 +151,7 @@ public class UserResourceIntTest {
             DEFAULT_FIRSTNAME,
             DEFAULT_LASTNAME,
             DEFAULT_EMAIL,
+            "17629100289",   "","",
             true,
             DEFAULT_IMAGEURL,
             DEFAULT_LANGKEY,
@@ -191,6 +192,8 @@ public class UserResourceIntTest {
             DEFAULT_FIRSTNAME,
             DEFAULT_LASTNAME,
             DEFAULT_EMAIL,
+            "17629100289",   "","",
+
             true,
             DEFAULT_IMAGEURL,
             DEFAULT_LANGKEY,
@@ -227,6 +230,8 @@ public class UserResourceIntTest {
             DEFAULT_FIRSTNAME,
             DEFAULT_LASTNAME,
             "anothermail@localhost",
+            "17629100289",   "","",
+
             true,
             DEFAULT_IMAGEURL,
             DEFAULT_LANGKEY,
@@ -263,6 +268,8 @@ public class UserResourceIntTest {
             DEFAULT_FIRSTNAME,
             DEFAULT_LASTNAME,
             DEFAULT_EMAIL, // this email should already be used
+            "17629100289",   "","",
+
             true,
             DEFAULT_IMAGEURL,
             DEFAULT_LANGKEY,
@@ -346,6 +353,8 @@ public class UserResourceIntTest {
             UPDATED_FIRSTNAME,
             UPDATED_LASTNAME,
             UPDATED_EMAIL,
+            "17629100289",   "","",
+
             updatedUser.getActivated(),
             UPDATED_IMAGEURL,
             UPDATED_LANGKEY,
@@ -390,6 +399,8 @@ public class UserResourceIntTest {
             UPDATED_FIRSTNAME,
             UPDATED_LASTNAME,
             UPDATED_EMAIL,
+            "17629100289",   "","",
+
             updatedUser.getActivated(),
             UPDATED_IMAGEURL,
             UPDATED_LANGKEY,
@@ -445,6 +456,8 @@ public class UserResourceIntTest {
             updatedUser.getFirstName(),
             updatedUser.getLastName(),
             "jhipster@localhost",  // this email should already be used by anotherUser
+            "17629100289",   "","",
+
             updatedUser.getActivated(),
             updatedUser.getImageUrl(),
             updatedUser.getLangKey(),
@@ -489,6 +502,8 @@ public class UserResourceIntTest {
             updatedUser.getFirstName(),
             updatedUser.getLastName(),
             updatedUser.getEmail(),
+            "17629100289",   "","",
+
             updatedUser.getActivated(),
             updatedUser.getImageUrl(),
             updatedUser.getLangKey(),
@@ -561,7 +576,11 @@ public class UserResourceIntTest {
             DEFAULT_LOGIN,
             DEFAULT_FIRSTNAME,
             DEFAULT_LASTNAME,
+            null,
             DEFAULT_EMAIL,
+            "17629100289",
+            "","",
+
             true,
             DEFAULT_IMAGEURL,
             DEFAULT_LANGKEY,

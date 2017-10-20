@@ -1,11 +1,16 @@
 package com.easted.sy.user.archieves.uaa.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
 @Table(name = "client_details", schema = "uaa", catalog = "")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+
 public class ClientDetails {
     private String appId;
     private String resourceIds;
@@ -19,9 +24,22 @@ public class ClientDetails {
     private String additionalInformation;
     private String autoApproveScopes;
 
+    private Integer id;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Basic
     @Column(name = "appId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "appId/应用ID不能为空")
+    @JsonView(DataTablesOutput.View.class)
     public String getAppId() {
         return appId;
     }
@@ -31,6 +49,7 @@ public class ClientDetails {
     }
 
     @Basic
+    @JsonView(DataTablesOutput.View.class)
     @Column(name = "resourceIds")
     public String getResourceIds() {
         return resourceIds;
@@ -41,6 +60,7 @@ public class ClientDetails {
     }
 
     @Basic
+    @JsonView(DataTablesOutput.View.class)
     @Column(name = "appSecret")
     public String getAppSecret() {
         return appSecret;
@@ -51,6 +71,8 @@ public class ClientDetails {
     }
 
     @Basic
+    @NotNull(message = "scopes/作用域不能为空")
+    @JsonView(DataTablesOutput.View.class)
     @Column(name = "scope")
     public String getScope() {
         return scope;
@@ -61,7 +83,9 @@ public class ClientDetails {
     }
 
     @Basic
+    @NotNull(message = "grantTypes/授权类型不能为空")
     @Column(name = "grantTypes")
+    @JsonView(DataTablesOutput.View.class)
     public String getGrantTypes() {
         return grantTypes;
     }
@@ -70,8 +94,10 @@ public class ClientDetails {
         this.grantTypes = grantTypes;
     }
 
+    @NotNull(message = "redirectUrl/重定向地址")
     @Basic
     @Column(name = "redirectUrl")
+    @JsonView(DataTablesOutput.View.class)
     public String getRedirectUrl() {
         return redirectUrl;
     }
@@ -82,6 +108,7 @@ public class ClientDetails {
 
     @Basic
     @Column(name = "authorities")
+    @JsonView(DataTablesOutput.View.class)
     public String getAuthorities() {
         return authorities;
     }
@@ -90,8 +117,10 @@ public class ClientDetails {
         this.authorities = authorities;
     }
 
+    @NotNull(message = "access_token_validity/access token有效时间（ms）不能为空")
     @Basic
     @Column(name = "access_token_validity")
+    @JsonView(DataTablesOutput.View.class)
     public Integer getAccessTokenValidity() {
         return accessTokenValidity;
     }
@@ -101,7 +130,9 @@ public class ClientDetails {
     }
 
     @Basic
+    @NotNull(message = "refresh_token_validity/refresh token有效时间（ms）不能为空")
     @Column(name = "refresh_token_validity")
+    @JsonView(DataTablesOutput.View.class)
     public Integer getRefreshTokenValidity() {
         return refreshTokenValidity;
     }
@@ -112,6 +143,7 @@ public class ClientDetails {
 
     @Basic
     @Column(name = "additionalInformation")
+    @JsonView(DataTablesOutput.View.class)
     public String getAdditionalInformation() {
         return additionalInformation;
     }
@@ -122,6 +154,7 @@ public class ClientDetails {
 
     @Basic
     @Column(name = "autoApproveScopes")
+    @JsonView(DataTablesOutput.View.class)
     public String getAutoApproveScopes() {
         return autoApproveScopes;
     }

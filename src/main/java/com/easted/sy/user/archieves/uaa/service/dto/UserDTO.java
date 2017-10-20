@@ -92,14 +92,16 @@ public class UserDTO {
 
     public UserDTO(User user) {
         this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(),
-            user.getEmail(), user.getActivated(), user.getImageUrl(), user.getLangKey(),
+            user.isVerified(),
+            user.getEmail(), user.getTel(),user.getName(),user.getIdentity(),user.getActivated(), user.getImageUrl(), user.getLangKey(),
             user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
             user.getAuthorities().stream().map(Authority::getName)
                 .collect(Collectors.toSet()));
     }
 
     public UserDTO(Long id, String login, String firstName, String lastName,
-        String email, boolean activated, String imageUrl, String langKey,
+        Boolean verified,
+        String email,String tel, String name,String identity,boolean activated, String imageUrl, String langKey,
         String createdBy, Instant createdDate, String lastModifiedBy, Instant lastModifiedDate,
         Set<String> authorities) {
 
@@ -107,6 +109,10 @@ public class UserDTO {
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;
+//        this.verified=verified;
+        if (null!=verified){
+            this.verified=verified;
+        }
         this.email = email;
         this.activated = activated;
         this.imageUrl = imageUrl;
@@ -116,6 +122,9 @@ public class UserDTO {
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
         this.authorities = authorities;
+        this.tel=tel;
+        this.identity=identity;
+        this.name=name;
     }
 
     public Long getId() {

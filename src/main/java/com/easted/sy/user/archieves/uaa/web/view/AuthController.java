@@ -1,7 +1,9 @@
 package com.easted.sy.user.archieves.uaa.web.view;
 
+import com.easted.sy.user.archieves.uaa.domain.RealName;
 import com.easted.sy.user.archieves.uaa.domain.User;
 import com.easted.sy.user.archieves.uaa.repository.PersistentTokenRepository;
+import com.easted.sy.user.archieves.uaa.repository.RealNameRepository;
 import com.easted.sy.user.archieves.uaa.repository.UserRepository;
 import com.easted.sy.user.archieves.uaa.service.MailService;
 import com.easted.sy.user.archieves.uaa.service.UserService;
@@ -33,6 +35,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +49,7 @@ public class AuthController {
     private  UserService userService;
     private  UserRepository userRepository;
     private DefaultKaptcha captchaProducer;
+    private RealNameRepository realNameRepository;
 
 
 
@@ -53,13 +57,14 @@ public class AuthController {
                           UserService userService,
                           MailService mailService,
                           PersistentTokenRepository persistentTokenRepository,
-                          DefaultKaptcha kaptcha) {
+                          DefaultKaptcha kaptcha,RealNameRepository realNameRepository) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.persistentTokenRepository = persistentTokenRepository;
         this.captchaProducer=kaptcha;
+        this.realNameRepository=realNameRepository;
     }
 
     /**
@@ -189,7 +194,33 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/",method = RequestMethod.GET)
-    public String index(){
+    public String index(Principal principal,Model model){
+        Boolean isVerfied,telBind=false;
+        User user=userRepository.findOneByLogin(principal.getName()).get();
+        String verifiedResult,telResult;
+        model.addAttribute("verifiedResult",user.getVerified());
+
+        if (user.getVerified()==null){
+            /*根据用户名查找实名认证信息*/
+           RealName realName= realNameRepository.findByLogin(principal.getName());
+           if (realName!=null){
+               verifiedResult="您的实名认证信息正在被后台审合同,请耐心等候";
+           }else {
+               verifiedResult="未实名认证，点击进行实名认证";
+           }
+            isVerfied=false;
+        }else {
+            verifiedResult="已实名认证";
+            isVerfied=true;
+        }
+        model.addAttribute("verifiedResult",verifiedResult);
+
+
+        telResult=user.getTel()==null?"未绑定手机号码":"已绑定手机号码";
+        telBind=user.getTel()==null?false:true;
+        model.addAttribute("telResult",telResult);
+        model.addAttribute("isHiden",isVerfied&&telBind);
+
         return "index";
     }
 

@@ -14,10 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.time.Instant;
 
 /**
@@ -116,8 +113,20 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String tel;
 
 
+    @Column(name = "enterprise_name")
+    private String enterpriseName;
 
+    @Column(name = "credit_code")
+    private String creditCode;
 
+    @Column(name = "is_legal_person")
+    private Boolean isLegalPserson;
+
+    @OneToMany(mappedBy = "user")
+    private List<BindEnterprise> bindEnterpriseList;
+
+    @OneToMany(mappedBy = "user")
+    private List<BindAgent> bindAgentList;
 
 
     @JsonIgnore
@@ -134,6 +143,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
+
 
     public Long getId() {
         return id;
@@ -289,6 +299,52 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+
+    public String getCreditCode() {
+        return creditCode;
+    }
+
+    public void setCreditCode(String creditCode) {
+        this.creditCode = creditCode;
+    }
+
+    public Boolean getLegalPserson() {
+        return isLegalPserson;
+    }
+
+    public void setLegalPserson(Boolean legalPserson) {
+        isLegalPserson = legalPserson;
+    }
+
+
+    public List<BindEnterprise> getBindEnterpriseList() {
+        return bindEnterpriseList;
+    }
+
+    public void setBindEnterpriseList(List<BindEnterprise> bindEnterpriseList) {
+        this.bindEnterpriseList = bindEnterpriseList;
+    }
+
+    public List<BindAgent> getBindAgentList() {
+        return bindAgentList;
+    }
+
+    public void setBindAgentList(List<BindAgent> bindAgentList) {
+        this.bindAgentList = bindAgentList;
     }
 
     @Override

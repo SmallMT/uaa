@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="manageLayout">
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css" th:href="@{~/css/bootstrap.min.css}">
+
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="@{~/}">首页</a></li>
+        <li><a href="#" th:href="@{/userManagement}">用户管理</a></li>
+        <li><a href="#" th:href="@{/userManagement/add}">添加用户</a></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <!--创建用户-->
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

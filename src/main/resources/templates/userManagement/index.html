@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="manageLayout">
+<head>
+    <title>用户管理</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs/dt-1.10.16/b-1.4.2/b-colvis-1.4.2/fc-3.2.3/fh-3.1.3/r-2.2.0/sl-1.2.3/datatables.min.css"/>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css" th:href="@{~/css/bootstrap.min.css}">
+
+    <style>
+        table th {
+            white-space: nowrap;
+            text-align: center;
+
+        }
+
+        table td {
+            white-space: nowrap;
+        }
+
+        table {
+            empty-cells: show;
+            border-collapse: collapse;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .operate {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div layout:fragment="content" class="container">
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="@{~/}">首页</a></li>
+        <li><a href="#" th:href="@{/userManagement}">用户管理</a></li>
+    </ol>
+
+    <!--<div class="row operate">-->
+        <!--<div class="col-sm-3">-->
+            <!--<a class="btn btn-primary" th:href="@{/userManagement/add}">添加</a>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <table id="table_id" class="table table-bordered">
+        <thead>
+        <tr>
+            <th>用户名</th>
+            <th>真实姓名</th>
+            <th>邮箱</th>
+            <th>电话</th>
+            <th>实名认证</th>
+            <th>权限</th>
+            <th>创建者</th>
+            <th>创建时间</th>
+            <th>最新修改人</th>
+            <th>最新修改日期</th>
+            <!--<th>操作</th>-->
+        </tr>
+        </thead>
+
+    </table>
+
+</div>
+
+
+<!--js-->
+<th:block layout:fragment="script">
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs/dt-1.10.16/b-1.4.2/b-colvis-1.4.2/fc-3.2.3/fh-3.1.3/r-2.2.0/sl-1.2.3/datatables.min.js"></script>
+    <script th:src="@{/js/jquery.cookie.js}" src="../../static/js/jquery.cookie.js"></script>
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+
+
+            var table = $('#table_id').DataTable({
+                language: {
+                    "sProcessing": "处理中...",
+                    "sLengthMenu": "显示 _MENU_ 项结果",
+                    "sZeroRecords": "没有匹配结果",
+                    "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                    "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                    "sInfoPostFix": "",
+                    "sSearch": "搜索:",
+                    "sUrl": "",
+                    "sEmptyTable": "表中数据为空",
+                    "sLoadingRecords": "载入中...",
+                    "sInfoThousands": ",",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上页",
+                        "sNext": "下页",
+                        "sLast": "末页"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": 以升序排列此列",
+                        "sSortDescending": ": 以降序排列此列"
+                    }
+                },
+                "lengthMenu": [[15, 20, 25, 50, -1], [15, 20, 25, 50, "所有"]],
+                searching: true,
+                "scrollX": true,
+                "processing": true,
+                "serverSide": true,
+                'ajax': {
+                    'contentType': 'application/json',
+                    'url': /*[[@{/userManagement/test}]]*/ '',
+                    'type': 'POST',
+                    'beforeSend': function (request) {
+                        request.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
+                    },
+                    'data': function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                fixedColumns: {
+                    leftColumns: 1,
+//                    rightColumns: 1
+                },
+                "columns": [
+                    {"data": "login"},
+                    {"data": "name"},
+                    {"data": 'email'},
+                    {"data": "tel"},
+                    {
+                        "data": "verified",
+                        "render": function (data, type, full, meta) {
+                            if (data==false){
+                                return "<span class='text-danger'>未认证</span>"
+                            }else {
+                                return "<span class='text-success'>已认证</span>"
+                            }
+
+                        },
+                    },
+                    {
+                        "data": 'authorities',
+                        'searchable': false
+                    },
+                    {"data": "createdBy"},
+                    {"data": "createdDate"},
+                    {"data": "lastModifiedBy"},
+                    {"data": 'lastModifiedDate'},
+//                    {
+//                        "data": 'lastModifiedDate',
+//                        "render": function (data, type, full, meta) {
+//                            return "<button id='edit' class='btn btn-primary' style='margin-right: 10px'>编辑</button><button  id='delete' class='btn btn-danger'>删除</button>"
+//                        },
+//                        "orderable": false
+//                    },
+
+                ],
+            });
+
+            /*跳转到编辑页面*/
+            $('#table_id tbody').on('click', '#edit', function () {
+                var data = table.row($(this).parents('tr')).data();
+                var url = /*[[@{/userManagement/edit/}]]*/ '';
+                window.location.href = url + data.login
+            });
+
+        })
+
+    </script>
+</th:block>
+
+</body>
+</html>

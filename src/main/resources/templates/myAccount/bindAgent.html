@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定办件人</title>
+    <link rel="stylesheet" href="../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{/myAccount/bindEnterprise}">绑定企业信息</a> >
+        <a href="#" th:href="@{__${#httpServletRequest.requestURI}__}">绑定办件人</a>
+
+    </div>
+
+    <div class="card-panel">
+        <blockquote>绑定办件人</blockquote>
+
+        <form th:action="@{~/myAccount/processBindAgent}" th:object="${bindAgentVM}" method="post">
+
+            <div class="center-align">
+                <p class="center-align" style="margin-bottom: 30px">绑定办件人前请先确认办件人已经注册了账号，并且已经已经通过实名认证，且已经绑定手机号码</p>
+            </div>
+
+            <div class="row">
+
+
+                <div class="col s6 offset-s3 input-field">
+                    <input type="tel" id="agentIdentity" placeholder="统一市场信用编号" readonly th:value="${creditCode}" th:field="*{creditCode}">
+                    <label for="agentIdentity">统一市场信用编号</label>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <input type="tel" id="agentIdentity" placeholder="请输入代办人身份证号" th:field="*{identity}">
+                    <label for="agentIdentity">代办人身份证号</label>
+                </div>
+
+                <div class="col s6 offset-s3">
+                    <p th:errors="*{identity}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <input type="text" id="agentName" placeholder="请输入代办人姓名" th:field="*{name}">
+                    <label for="agentName">代办人姓名</label>
+                </div>
+
+                <div class="col s6 offset-s3">
+                    <p th:errors="*{name}"></p>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <input type="tel" id="tel" placeholder="请输入代办人电话" th:field="*{tel}">
+                    <label for="tel">代办人电话</label>
+                </div>
+
+                <div class="col s6 offset-s3">
+                    <p th:errors="*{tel}"></p>
+                </div>
+
+
+                <div class="col s6 offset-s3">
+                    <p th:text="${result}">绑定办件人前请先确认办件人已经注册了账号，并且已经已经通过实名认证，且已经绑定手机号码</p>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <a class="right" th:href="@{__${#httpServletRequest.requestURI}__/binded}">点击查看已绑定代办人</a>
+                </div>
+
+                <div class="col s6 offset-s3 input-field">
+                    <button class="btn right" type="submit">绑定</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

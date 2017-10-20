@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="manageLayout">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑用户</title>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <ol class="breadcrumb">
+        <li><a href="#" th:href="@{~/}">首页</a></li>
+        <li><a href="#" th:href="@{/userManagement}">用户管理</a></li>
+        <li class="active"><a href="#" th:href="@{__${#httpServletRequest.requestURI}__}">编辑</a></li>
+    </ol>
+</div>
+</body>
+</html>
