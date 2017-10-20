@@ -46,11 +46,11 @@ public class MyAccountController {
 
     private BindAgentRepository bindAgentRepository;
 
-    public MyAccountController(UserRepository userRepository,RealNameRepository realNameRepository,BindEnterpriseRepository bindEnterpriseRepository,BindAgentRepository bindAgentRepository) {
+    public MyAccountController(UserRepository userRepository, RealNameRepository realNameRepository, BindEnterpriseRepository bindEnterpriseRepository, BindAgentRepository bindAgentRepository) {
         this.userRepository = userRepository;
-        this.realNameRepository=realNameRepository;
-        this.bindEnterpriseRepository=bindEnterpriseRepository;
-        this.bindAgentRepository=bindAgentRepository;
+        this.realNameRepository = realNameRepository;
+        this.bindEnterpriseRepository = bindEnterpriseRepository;
+        this.bindAgentRepository = bindAgentRepository;
     }
 
     public static final MediaType JSON
@@ -81,16 +81,16 @@ public class MyAccountController {
      * @return
      */
     @RequestMapping(value = "/realName", method = RequestMethod.GET)
-    public String realName(Model model,Principal principal) {
+    public String realName(Model model, Principal principal) {
         if (!model.containsAttribute("realNameVM")) {
             model.addAttribute("realNameVM", new RealNameVM());
         }
 
-        User user=userRepository.findOneByLogin(principal.getName()).get();
-        model.addAttribute("realNameResult",user.getVerified());
-        RealName realName=realNameRepository.findByLogin(principal.getName());
-        if (realName!=null){
-            model.addAttribute("isUpload",true);
+        User user = userRepository.findOneByLogin(principal.getName()).get();
+        model.addAttribute("realNameResult", user.getVerified());
+        RealName realName = realNameRepository.findByLogin(principal.getName());
+        if (realName != null) {
+            model.addAttribute("isUpload", true);
 
         }
 
@@ -103,10 +103,10 @@ public class MyAccountController {
      * @return
      */
     @RequestMapping(value = "/bindTel", method = RequestMethod.GET)
-    public String bindTel(Principal principal,Model model) {
-        User user=userRepository.findOneByLogin(principal.getName()).get();
-        if (user.getTel()!=null){
-            model.addAttribute("bindTelResult",user.getTel());
+    public String bindTel(Principal principal, Model model) {
+        User user = userRepository.findOneByLogin(principal.getName()).get();
+        if (user.getTel() != null) {
+            model.addAttribute("bindTelResult", user.getTel());
         }
 
         return "myAccount/bindTel";
@@ -243,38 +243,40 @@ public class MyAccountController {
 
     /**
      * 查看该用户所绑定的企业
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = "/bindEnterprise/binded", method = RequestMethod.GET)
-    public String bindedEnterprise(Model model,Principal principal) {
-       User user= userRepository.findOneByLogin(principal.getName()).get();
+    public String bindedEnterprise(Model model, Principal principal) {
+        User user = userRepository.findOneByLogin(principal.getName()).get();
 
-        List<BindEnterprise> bindEnterpriseList= bindEnterpriseRepository.findBindEnterprisesByUser(user);
-        model.addAttribute("bindEnterpriseList",bindEnterpriseList);
+        List<BindEnterprise> bindEnterpriseList = bindEnterpriseRepository.findBindEnterprisesByUser(user);
+        model.addAttribute("bindEnterpriseList", bindEnterpriseList);
         return "myAccount/enterpriseBinded";
     }
 
 
     /**
      * 绑定代办人的页面
+     *
      * @param creditCode
      * @return
      */
     @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}", method = RequestMethod.GET)
-    public String bindAgent(Model model, @PathVariable("creditCode")String creditCode) {
+    public String bindAgent(Model model, @PathVariable("creditCode") String creditCode) {
         if (!model.containsAttribute("bindAgentVM")) {
-            BindAgentVM bindAgentVM=new BindAgentVM();
+            BindAgentVM bindAgentVM = new BindAgentVM();
             bindAgentVM.setCreditCode(creditCode);
             model.addAttribute("bindAgentVM", bindAgentVM);
         }
         return "myAccount/bindAgent";
     }
 
-    @RequestMapping(value = "/bindEnterprise/binded/processUnBind",method = RequestMethod.POST)
+    @RequestMapping(value = "/bindEnterprise/binded/processUnBind", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity processUnBind(@org.springframework.web.bind.annotation.RequestBody Map map){
-        String creditCode= map.get("creditCode").toString();
+    public ResponseEntity processUnBind(@org.springframework.web.bind.annotation.RequestBody Map map) {
+        String creditCode = map.get("creditCode").toString();
         bindEnterpriseRepository.deleteBindEnterpriseByCreditCode(creditCode);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -287,7 +289,7 @@ public class MyAccountController {
      * @return
      */
     @RequestMapping(value = "/processBindEnterprise", method = RequestMethod.POST)
-    public String processBindEnterprise(Principal principal, @Valid @ModelAttribute(name = "bindEnterpriseVM") BindEnterpriseVM bindEnterpriseVM, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String processBindEnterprise(Principal principal, @Valid @ModelAttribute(name = "bindEnterpriseVM") BindEnterpriseVM bindEnterpriseVM, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
 
         boolean isFound = true;
 
@@ -297,7 +299,30 @@ public class MyAccountController {
             return "redirect:/myAccount/bindEnterprise";
         }
 
-        //TODO 检测输入信息是否匹配
+        //如果没有实名认证
+        User user = userRepository.findOneByLogin(principal.getName()).get();
+        if (!user.isVerified()) {
+            redirectAttributes.addFlashAttribute("result", "您还没有进行实名认证");
+        } else if (user.getTel() == null) {
+            redirectAttributes.addFlashAttribute("result", "您还没有绑定电话号码");
+        } else if (user.isVerified() && user.getTel() != null) {
+            /*检测是否匹配*/
+            JSONObject obj = new JSONObject();
+            obj.put("id", user.getIdentity());
+            /*http请求*/
+            OkHttpClient client = new OkHttpClient();
+            RequestBody body = RequestBody.create(JSON, obj.toJSONString());
+            Request request = new Request.Builder()
+                .url("http://10.10.130.81:8079/getlegalperinfo")
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+            Response response = client.newCall(request).execute();
+
+            String responseBody = response.body().string();
+
+        }
 
         if (!isFound) {
             /*如果没有找到*/
@@ -306,7 +331,7 @@ public class MyAccountController {
 
         }
         // 将信息填写到数据库中
-        BindEnterprise bindEnterprise=new BindEnterprise();
+        BindEnterprise bindEnterprise = new BindEnterprise();
         bindEnterprise.setCreditCode(bindEnterpriseVM.getCreditCode());
         bindEnterprise.setEnterpriseName(bindEnterpriseVM.getEnterpriseName());
         /*设置法人*/
@@ -320,21 +345,20 @@ public class MyAccountController {
     }
 
 
-
     /**
      * 已绑定办件人的页面
      *
      * @return
      */
     @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}/binded", method = RequestMethod.GET)
-    public String agentBinded(Model model,Principal principal,@PathVariable("creditCode")String creditCode) {
+    public String agentBinded(Model model, Principal principal, @PathVariable("creditCode") String creditCode) {
         /*法人用户信息*/
-        User user=userRepository.findOneByLogin(principal.getName()).get();
+        User user = userRepository.findOneByLogin(principal.getName()).get();
         /*该法人绑定的所有企业*/
-        BindEnterprise bindEnterprise=bindEnterpriseRepository.findBindEnterpriseByUserAndCreditCode(user,creditCode);
+        BindEnterprise bindEnterprise = bindEnterpriseRepository.findBindEnterpriseByUserAndCreditCode(user, creditCode);
         /*该企业绑定的办件人*/
-        List<BindAgent> bindAgentList=bindAgentRepository.findBindAgentsByBindEnterprise(bindEnterprise);
-        model.addAttribute("bindAgentList",bindAgentList);
+        List<BindAgent> bindAgentList = bindAgentRepository.findBindAgentsByBindEnterprise(bindEnterprise);
+        model.addAttribute("bindAgentList", bindAgentList);
 
         return "myAccount/agentBinded";
     }
@@ -342,18 +366,17 @@ public class MyAccountController {
 
     /**
      * 处理解绑办件人
+     *
      * @return
      */
     @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}/binded/processUnBindAgent", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity processUnBindAgent(@org.springframework.web.bind.annotation.RequestBody Map map,@PathVariable("creditCode")String creditCode,Model model){
-        Integer id=Integer.parseInt(map.get("id").toString());
-        model.addAttribute("creditCode",creditCode);
+    public ResponseEntity processUnBindAgent(@org.springframework.web.bind.annotation.RequestBody Map map, @PathVariable("creditCode") String creditCode, Model model) {
+        Integer id = Integer.parseInt(map.get("id").toString());
+        model.addAttribute("creditCode", creditCode);
         bindAgentRepository.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-
 
 
     /**
@@ -368,7 +391,7 @@ public class MyAccountController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.bindAgentVM", bindingResult);
             redirectAttributes.addFlashAttribute("bindAgentVM", bindAgentVM);
-            return "redirect:/myAccount/bindEnterprise/binded/bindAgent/"+bindAgentVM.getCreditCode();
+            return "redirect:/myAccount/bindEnterprise/binded/bindAgent/" + bindAgentVM.getCreditCode();
         }
 
         String result;
@@ -379,9 +402,9 @@ public class MyAccountController {
         User user = userRepository.findUserByIdentity(bindAgentVM.getIdentity());
 
         /*法人*/
-        User legalUser=userRepository.findOneByLogin(principal.getName()).get();
+        User legalUser = userRepository.findOneByLogin(principal.getName()).get();
         /*被绑定的企业*/
-        BindEnterprise bindEnterprise= bindEnterpriseRepository.findBindEnterpriseByUserAndCreditCode(legalUser,bindAgentVM.getCreditCode());
+        BindEnterprise bindEnterprise = bindEnterpriseRepository.findBindEnterpriseByUserAndCreditCode(legalUser, bindAgentVM.getCreditCode());
 
         if (user == null) { //没有找到用户或者没有进行实名认证
             result = "没有找到身份证绑定的用户信息，请保证用户已注册并且已经实名认证。";
@@ -390,28 +413,27 @@ public class MyAccountController {
             result = "该用户没有进行实名认证，请保证该用户已经实名认证。";
             redirectAttributes.addFlashAttribute("bindAgentVM", bindAgentVM);
 
-        }else if (bindAgentRepository.findByUserAndBindEnterprise(user,bindEnterprise)!=null){
+        } else if (bindAgentRepository.findByUserAndBindEnterprise(user, bindEnterprise) != null) {
             result = "该身份证的用户已经被您绑定，不能重复绑定";
             redirectAttributes.addFlashAttribute("bindAgentVM", bindAgentVM);
-        }else if (!user.getTel().equals(bindAgentVM.getTel())){
+        } else if (!user.getTel().equals(bindAgentVM.getTel())) {
             result = "手机号码不匹配。";
             redirectAttributes.addFlashAttribute("bindAgentVM", bindAgentVM);
-        }else if (!user.getName().equals(bindAgentVM.getName())){
+        } else if (!user.getName().equals(bindAgentVM.getName())) {
             result = "姓名不匹配。";
             redirectAttributes.addFlashAttribute("bindAgentVM", bindAgentVM);
-        }
-        else { //将该用户设置为当前企业的经办人
+        } else { //将该用户设置为当前企业的经办人
 //            User user1 = userRepository.findOneByLogin(principal.getName()).get();
 //            userRepository.setMyEnterprise(user.getLogin(), user1.getEnterpriseName(), user1.getCreditCode(), false);
-            BindAgent bindAgent=new BindAgent();
+            BindAgent bindAgent = new BindAgent();
             bindAgent.setUser(user);
             bindAgent.setBindEnterprise(bindEnterprise);
             bindAgentRepository.save(bindAgent);
-            result="绑定办件人成功";
+            result = "绑定办件人成功";
         }
 
         redirectAttributes.addFlashAttribute("result", result);
-        return "redirect:/myAccount/bindEnterprise/binded/bindAgent/"+bindAgentVM.getCreditCode();
+        return "redirect:/myAccount/bindEnterprise/binded/bindAgent/" + bindAgentVM.getCreditCode();
 
     }
 
