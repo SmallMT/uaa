@@ -321,7 +321,7 @@ public class MyAccountController {
             Response response = client.newCall(request).execute();
 
             String responseBody = response.body().string();
-
+            JSONObject jsonObject= com.alibaba.fastjson.JSON.parseObject(responseBody);
         }
 
         if (!isFound) {
