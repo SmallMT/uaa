@@ -159,8 +159,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/favicon.ico", "/css/**", "/js/**", "/plugins/**", "/fonts/**", "/img/**").permitAll()
-            .antMatchers("/randCode","/login","/authentication","/register","/processRegister","/activate").permitAll()
+            .antMatchers("/randCode","/login","/authentication","/register","/processRegister","/activate","/forgetPassword/**").permitAll()
             .antMatchers("/clientManagement/clientDetails").authenticated()
+            .antMatchers("/realNameManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //实名认证
+            .antMatchers("/clientManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //OAuth客户端管理
+            .antMatchers("/userManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //用户管理
+
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()

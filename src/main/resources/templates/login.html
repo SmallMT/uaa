@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layout">
 <head>
@@ -26,10 +26,13 @@
         <div class="col s6 offset-s3">
             <div class="card card-panel">
                 <blockquote>登录</blockquote>
+                <p class="right-align"><a th:href="@{/register}">没有账号？点我注册</a>
+                </p>
                 <form method="post" th:action="@{/authentication}">
                     <div class="row">
                         <div class="col s12 input-field">
-                            <input class="uk-width-1-1 uk-form-large" type="text" placeholder="请输入用户名" id="username" name="username"/>
+                            <input class="uk-width-1-1 uk-form-large" type="text" placeholder="请输入用户名" id="username"
+                                   name="username"/>
 
                             <label for="username">用户名</label>
                         </div>
@@ -37,7 +40,8 @@
 
                     <div class="row">
                         <div class="col s12 input-field">
-                            <input class="uk-width-1-1 uk-form-large" type="password" placeholder="请输入密码" id="password" name="password"/>
+                            <input class="uk-width-1-1 uk-form-large" type="password" placeholder="请输入密码" id="password"
+                                   name="password"/>
 
                             <label for="password">密码</label>
                         </div>
@@ -67,7 +71,7 @@
 
                     <div class="row">
                         <div class="s5 col">
-                            <a th:href="@{/register}">没有账号？点我注册</a>
+                            <a th:href="@{/forgetPassword}">忘记密码？</a>
                         </div>
 
                         <div class="s4 col offset-s3">
@@ -81,7 +85,6 @@
     </div>
 </div>
 </body>
-
 
 
 </html>
