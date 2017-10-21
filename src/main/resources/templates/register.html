@@ -124,7 +124,7 @@
             methods: {
                 register: function () {
 //                发起注册请求
-                    axios.post('http://localhost:9090/api/register', this.registerData)
+                    axios.post('http://199.224.20.102:9090/api/register', this.registerData)
                         .then(function (response) {
                             if (response.status == 201) {
                                 Materialize.toast('注册成功,已经向您的服务器发送激活链接，点击激活链接即可激活邮箱',4000)
