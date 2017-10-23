@@ -26,12 +26,12 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-#        url: jdbc:mysql://199.224.20.211:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
-#        username: root
-#        password: root@123.
-        url: jdbc:mysql://10.10.139.161:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://199.224.20.211:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
-        password: 123456
+        password: root@123.
+#        url: jdbc:mysql://10.10.139.161:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
+#        username: root
+#        password: 123456
         hikari:
             data-source-properties:
             cachePrepStmts: true
@@ -115,8 +115,7 @@ jhipster:
             key: e0632b1831447033a8a63b9f2d8898d2b3502e45
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: liuyatao1992@163.com
-#        base-url: http://199.224.20.102:9090
-        base-url: http://localhost:9090
+        base-url: http://199.224.20.102:9090
 
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true

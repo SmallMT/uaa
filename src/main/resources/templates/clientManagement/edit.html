@@ -143,13 +143,24 @@
         $(document).ready(function () {
 
             var autoApproveScopes = /*[[${clientDetails.autoApproveScopes}]]*/ ''
-            $('#auto_approve_scopes').selectpicker('val', autoApproveScopes.split(","));
+
+            if (autoApproveScopes!=null){
+                $('#auto_approve_scopes').selectpicker('val', autoApproveScopes.split(","));
+            }
 
             var scope=/*[[${clientDetails.scope}]]*/ ''
-            $('#scopes').selectpicker('val',scope.split(","))
+
+            if (scope!=null){
+                $('#scopes').selectpicker('val',scope.split(","))
+            }
 
             var grantTypes=/*[[${clientDetails.grantTypes}]]*/ ''
-            $('#grantTypes').selectpicker('val',grantTypes.split(","))
+
+            if (grantTypes!=null){
+                $('#grantTypes').selectpicker('val',grantTypes.split(","))
+
+            }
+
 
         })
 
