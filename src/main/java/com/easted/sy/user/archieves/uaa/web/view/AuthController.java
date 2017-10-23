@@ -190,7 +190,7 @@ public class AuthController {
         String verifiedResult,telResult;
         model.addAttribute("verifiedResult",user.getVerified());
 
-        if (user.getVerified()==null){
+        if (user.getVerified()==null||user.getVerified()==false){
             /*根据用户名查找实名认证信息*/
            RealName realName= realNameRepository.findByLogin(principal.getName());
            if (realName!=null){
