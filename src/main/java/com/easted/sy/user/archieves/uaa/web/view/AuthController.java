@@ -159,7 +159,7 @@ public class AuthController {
                null);
 
             mailService.sendActivationEmail(user);
-            msg="注册完成";
+            msg="注册完成,请登录邮箱："+registerVM.getEmail()+"激活账号";
         }
         redirectAttributes.addFlashAttribute("result",msg);
         redirectAttributes.addFlashAttribute("registerVM",registerVM);

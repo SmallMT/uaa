@@ -37,7 +37,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         Optional<User> userFromDatabase = userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin);
         return userFromDatabase.map(user -> {
             if (!user.getActivated()) {
-                throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
+                throw new UserNotActivatedException("用户 " + lowercaseLogin + " 没有被激活，请前往注册邮箱激活该账号");
             }
             List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getName()))

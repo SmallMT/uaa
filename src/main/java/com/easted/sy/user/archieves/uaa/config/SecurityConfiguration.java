@@ -222,6 +222,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         Map<String, String> failureUrlMap = new HashMap<>();
         failureUrlMap.put(BadCredentialsException.class.getName(), LoginAuthenticationFailureHandler.PASS_ERROR_URL);
         failureUrlMap.put(CaptchaException.class.getName(), LoginAuthenticationFailureHandler.CODE_ERROR_URL);
+        failureUrlMap.put(UserNotActivatedException.class.getName(),LoginAuthenticationFailureHandler.NotActivated);
         failureUrlMap.put(AccountExpiredException.class.getName(), LoginAuthenticationFailureHandler.EXPIRED_URL);
         failureUrlMap.put(LockedException.class.getName(), LoginAuthenticationFailureHandler.LOCKED_URL);
         failureUrlMap.put(DisabledException.class.getName(), LoginAuthenticationFailureHandler.DISABLED_URL);
