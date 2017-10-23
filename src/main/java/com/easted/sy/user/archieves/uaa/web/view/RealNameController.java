@@ -4,6 +4,7 @@ package com.easted.sy.user.archieves.uaa.web.view;
 import com.easted.sy.user.archieves.uaa.domain.RealName;
 import com.easted.sy.user.archieves.uaa.repository.RealNameRepository;
 import com.easted.sy.user.archieves.uaa.service.util.RandomUtil;
+import com.easted.sy.user.archieves.uaa.tools.PassWordCreate;
 import com.easted.sy.user.archieves.uaa.web.view.vm.RealNameVM;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -67,9 +68,10 @@ public class RealNameController {
             SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
             Random random=new Random(100000);
 
-            selfieFile=new File(dirPath+"//"+principal.getName()+"//"+ simpleDateFormat.format(new Date())+System.currentTimeMillis()+realNameVM.getSelfieFile().getOriginalFilename());
-            frontFile=new File(dirPath+"//"+principal.getName()+"//"+simpleDateFormat.format(new Date())+System.currentTimeMillis()+realNameVM.getFrontFile().getOriginalFilename());
-            backFile=new File(dirPath+"//"+principal.getName()+"//"+simpleDateFormat.format(new Date())+System.currentTimeMillis()+realNameVM.getBackFile().getOriginalFilename());
+            PassWordCreate passWordCreate=new PassWordCreate();
+            selfieFile=new File(dirPath+"//"+principal.getName()+"//"+ simpleDateFormat.format(new Date())+passWordCreate.createPassWord(10)+realNameVM.getSelfieFile().getOriginalFilename());
+            frontFile=new File(dirPath+"//"+principal.getName()+"//"+simpleDateFormat.format(new Date())+passWordCreate.createPassWord(10)+realNameVM.getFrontFile().getOriginalFilename());
+            backFile=new File(dirPath+"//"+principal.getName()+"//"+simpleDateFormat.format(new Date())+passWordCreate.createPassWord(10)+realNameVM.getBackFile().getOriginalFilename());
 
             realNameVM.getSelfieFile().transferTo(selfieFile);
             realNameVM.getFrontFile().transferTo(frontFile);
@@ -84,9 +86,11 @@ public class RealNameController {
             realName.setIdentity(realNameVM.getIdentity());
 
             realNameRepository.save(realName);
+            redirectAttributes.addAttribute("result","保存成功");
 
 //            保存信息到数据库中
         } catch (IOException e) {
+            redirectAttributes.addAttribute("result",e.getMessage());
             e.printStackTrace();
         }
 
