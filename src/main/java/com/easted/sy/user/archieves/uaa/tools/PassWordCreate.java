@@ -48,9 +48,4 @@ public class PassWordCreate {
         int tempint = (int)Math.ceil(temp);
         return tempint;
     }
-
-    public static void main(String[] args){
-        PassWordCreate pwc = new PassWordCreate();
-        System.out.println(pwc.createPassWord(8));
-    }
 }

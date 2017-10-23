@@ -42,7 +42,7 @@
 
 
                 <div class="col s6 offset-s3 input-field">
-                    <input id="identity" type="text" placeholder="请输入身份证号码" th:field="*{identity}">
+                    <input id="identity" type="text" placeholder="请输入身份证号码"  th:field="*{identity}">
                     <label for="identity">身份证号码</label>
                 </div>
 
@@ -53,10 +53,10 @@
                 <div class="col s6 offset-s3 file-field input-field">
                     <div class="btn">
                         <span>选择文件</span>
-                        <input type="file" th:field="*{frontFile}" placeholder="正面">
+                        <input type="file" th:field="*{frontFile}" accept="image/*" placeholder="正面">
                     </div>
                     <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="身份证正面">
+                        <input class="file-path validate" type="text" accept="image/*" placeholder="身份证正面">
                     </div>
                 </div>
 
@@ -67,10 +67,10 @@
                 <div class="col s6 offset-s3 file-field input-field">
                     <div class="btn">
                         <span>选择文件</span>
-                        <input type="file" th:field="*{backFile}" placeholder="背面">
+                        <input type="file" th:field="*{backFile}"accept="image/*" placeholder="背面">
                     </div>
                     <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="身份证反面">
+                        <input class="file-path validate" type="text" accept="image/*" placeholder="身份证反面">
                     </div>
                 </div>
 
@@ -82,11 +82,11 @@
                 <div class="col s6 offset-s3 file-field input-field">
                     <div class="btn">
                         <span>选择文件</span>
-                        <input type="file" th:field="*{selfieFile}" placeholder="手持">
+                        <input type="file" th:field="*{selfieFile}" accept="image/*" placeholder="手持">
 
                     </div>
                     <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="手持身份照">
+                        <input class="file-path validate" type="text" accept="image/*" placeholder="手持身份照">
                     </div>
                 </div>
 
