@@ -301,20 +301,26 @@ public class MyAccountController {
 
         //如果没有实名认证
         User user = userRepository.findOneByLogin(principal.getName()).get();
+        String creditcode,ename;
         if (!user.isVerified()) {
             redirectAttributes.addFlashAttribute("result", "您还没有进行实名认证");
+            return "redirect:/myAccount/bindEnterprise";
         } else if (user.getTel() == null) {
             redirectAttributes.addFlashAttribute("result", "您还没有绑定电话号码");
+            return "redirect:/myAccount/bindEnterprise";
         } else if (user.isVerified() && user.getTel() != null) {
             /*检测是否匹配*/
             JSONObject obj = new JSONObject();
             obj.put("id", user.getIdentity());
             /*http请求*/
             OkHttpClient client = new OkHttpClient();
-            RequestBody body = RequestBody.create(JSON, obj.toJSONString());
+            FormBody.Builder builder = new FormBody.Builder();
+            builder.add("id",user.getIdentity());
+            RequestBody formBody = builder.build();
+
             Request request = new Request.Builder()
-                .url("http://10.10.130.81:8079/getlegalperinfo")
-                .post(body)
+                .url("http://199.224.20.101:8079/legalperinfo")
+                .post(formBody)
                 .addHeader("Content-Type", "application/json")
                 .build();
 
@@ -322,14 +328,22 @@ public class MyAccountController {
 
             String responseBody = response.body().string();
             JSONObject jsonObject= com.alibaba.fastjson.JSON.parseObject(responseBody);
+            creditcode=jsonObject.getString("creditcode");
+            ename=jsonObject.getString("ename");
+
+            if (creditcode==null){
+                redirectAttributes.addFlashAttribute("result", "没有找到和你相关的企业");
+                return "redirect:/myAccount/bindEnterprise";
+            }else if (ename.equals(bindEnterpriseVM.getEnterpriseName())){
+                redirectAttributes.addFlashAttribute("result", "企业名称不匹配");
+                return "redirect:/myAccount/bindEnterprise";
+            }else if (creditcode.equals(bindEnterpriseVM.getCreditCode())){
+                redirectAttributes.addFlashAttribute("result", "统一社会信用代码不匹配");
+                return "redirect:/myAccount/bindEnterprise";
+            }
+
         }
 
-        if (!isFound) {
-            /*如果没有找到*/
-            redirectAttributes.addFlashAttribute("result", "");
-            /*如果企业名称和企业*/
-
-        }
         // 将信息填写到数据库中
         BindEnterprise bindEnterprise = new BindEnterprise();
         bindEnterprise.setCreditCode(bindEnterpriseVM.getCreditCode());
