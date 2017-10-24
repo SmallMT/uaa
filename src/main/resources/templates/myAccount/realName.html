@@ -27,10 +27,12 @@
 
     <div class="card-panel">
         <blockquote>实名认证</blockquote>
-        <p th:if="${isPass.equals('不通过') >实名认证未通过,请</p>
-        <form th:if="${isPass.equals('不通过')||}" th:object="${realNameVM}" enctype="multipart/form-data" method="post"
+        <p class="center-align" th:if="${state.equals('不通过')}">审核未通过，请重新提交实名认证信息</p>
+
+        <form  th:object="${realNameVM}" th:if="${state.equals('未提交')||state.equals('不通过')}" enctype="multipart/form-data" method="post"
               th:action="@{/myAccount/realName/realNameProcess}">
 
+            <input hidden th:field="*{id}">
             <div class="row">
                 <div class="col s6 offset-s3 input-field">
                     <input id="name" type="text" placeholder="请输入真实姓名" th:field="*{name}">
@@ -104,8 +106,7 @@
         </form>
 
 
-        <!--实名认证已通过-->
-        <div class="row" th:if="${isPass.equals('通过')}">
+        <div class="row" th:if="${state.equals('通过')}">
             <div class="col s6 offset-s3">
                 <h5 class="center-align" th:inline="text">实名认证已经通过</h5>
             </div>
@@ -122,7 +123,7 @@
 
 
         <!--已提交等待审核-->
-        <div class="row" th:if="${isUpload==true&&realNameResult==false&&isPass==null}">
+        <div class="row" th:if="${state.equals('未审核')}">
             <div class="col s6 offset-s3">
                 <h5 class="center-align" th:inline="text">已经提交实名认证信息，请耐心等候</h5>
             </div>

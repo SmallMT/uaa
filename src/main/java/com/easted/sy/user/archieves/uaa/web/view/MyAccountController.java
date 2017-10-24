@@ -82,19 +82,23 @@ public class MyAccountController {
      */
     @RequestMapping(value = "/realName", method = RequestMethod.GET)
     public String realName(Model model, Principal principal) {
-        if (!model.containsAttribute("realNameVM")) {
-            model.addAttribute("realNameVM", new RealNameVM());
-        }
-
-        User user = userRepository.findOneByLogin(principal.getName()).get();
-        /*状态*/
-        model.addAttribute("realNameResult", user.getVerified());
-        /*实名认证信息*/
         RealName realName = realNameRepository.findByLogin(principal.getName());
 
+        if (!model.containsAttribute("realNameVM")) {
+            RealNameVM realNameVM=new RealNameVM();
+            if (realName!=null){
+                if ("不通过".equals(realName.getState())){
+                    realNameVM.setId(realName.getId());
+                }
+            }
+            model.addAttribute("realNameVM", realNameVM);
+        }
+
         if (realName != null) {
-            model.addAttribute("isUpload", true);
-            model.addAttribute("isPass",realName.getState());
+            model.addAttribute("state",realName.getState()==null?"未审核":realName.getState());//不通过、通过、未审核
+        }else {
+            model.addAttribute("state","未提交");//未提交
+
         }
 
         return "myAccount/realName";

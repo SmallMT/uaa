@@ -78,6 +78,9 @@ public class RealNameController {
             realNameVM.getBackFile().transferTo(backFile);
 
             RealName realName=new RealName();
+            if (realNameVM.getId()!=null){
+                realName.setId(realNameVM.getId());
+            }
             realName.setBackImage(backFile.getName());
             realName.setFrontImage(frontFile.getName());
             realName.setSelfieImage(selfieFile.getName());

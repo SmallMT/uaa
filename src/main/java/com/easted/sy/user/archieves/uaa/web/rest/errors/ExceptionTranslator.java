@@ -2,9 +2,13 @@ package com.easted.sy.user.archieves.uaa.web.rest.errors;
 
 import java.util.List;
 
+import org.apache.commons.fileupload.FileUploadBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,12 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Controller advice to translate the server side exceptions to client-friendly json structures.
@@ -27,10 +37,38 @@ public class ExceptionTranslator {
     private final Logger log = LoggerFactory.getLogger(ExceptionTranslator.class);
 
 
+    @Autowired
+    private MessageSource messageSource;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
+
+    @ExceptionHandler(value = MultipartException.class)
+    public RedirectView handleMultipartException(Exception ex, HttpServletRequest request){
+        RedirectView model = new RedirectView("error");
+        FlashMap flash = RequestContextUtils.getOutputFlashMap(request);
+        if (ex instanceof MultipartException) {
+            MultipartException mEx = (MultipartException)ex;
+
+            if (ex.getCause() instanceof FileUploadBase.FileSizeLimitExceededException){
+                FileUploadBase.FileSizeLimitExceededException flEx = (FileUploadBase.FileSizeLimitExceededException)mEx.getCause();
+                float permittedSize = flEx.getPermittedSize() / 1024;
+                String message = messageSource.getMessage(
+                    "file.maxsize",
+                    new Object[]{flEx.getFileName(), permittedSize},
+                    LocaleContextHolder.getLocale());
+                flash.put("errors", message);
+            } else {
+                flash.put("errors", "Please contact your administrator: " + ex.getMessage());
+            }
+        } else {
+            flash.put("errors", "Please contact your administrator: " + ex.getMessage());
+        }
+        return model;
+    }
+
 
     @ExceptionHandler(ConcurrencyFailureException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

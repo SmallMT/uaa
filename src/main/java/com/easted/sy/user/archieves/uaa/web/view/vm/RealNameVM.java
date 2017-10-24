@@ -2,12 +2,17 @@ package com.easted.sy.user.archieves.uaa.web.view.vm;
 
 
 import com.easted.sy.user.archieves.uaa.validator.FileNotEmptyConstraint;
+import com.easted.sy.user.archieves.uaa.validator.FileSizeConstraint;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class RealNameVM {
+
+    @Nullable
+    private Integer id;
 
     @NotNull(message = "真实姓名不为空")
     private String name;
@@ -17,13 +22,16 @@ public class RealNameVM {
 
 
     @FileNotEmptyConstraint(message = "身份证正面照不能为空")
+    @FileSizeConstraint
     private MultipartFile frontFile;
 
 
     @FileNotEmptyConstraint(message = "身份证反面照不能为空")
+    @FileSizeConstraint
     private MultipartFile backFile;
 
     @FileNotEmptyConstraint(message = "手持身份证照片不能为空")
+    @FileSizeConstraint
     private MultipartFile selfieFile;
 
     public String getName() {
@@ -64,5 +72,13 @@ public class RealNameVM {
 
     public void setSelfieFile(MultipartFile selfieFile) {
         this.selfieFile = selfieFile;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
