@@ -87,11 +87,14 @@ public class MyAccountController {
         }
 
         User user = userRepository.findOneByLogin(principal.getName()).get();
+        /*状态*/
         model.addAttribute("realNameResult", user.getVerified());
+        /*实名认证信息*/
         RealName realName = realNameRepository.findByLogin(principal.getName());
+
         if (realName != null) {
             model.addAttribute("isUpload", true);
-
+            model.addAttribute("isPass",realName.getState());
         }
 
         return "myAccount/realName";

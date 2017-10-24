@@ -187,16 +187,19 @@ public class AuthController {
     public String index(Principal principal,Model model){
         Boolean isVerfied,telBind=false;
         User user=userRepository.findOneByLogin(principal.getName()).get();
-        String verifiedResult,telResult;
+        String verifiedResult = null,telResult;
         model.addAttribute("verifiedResult",user.getVerified());
 
+        /*没有被认证*/
         if (user.getVerified()==null||user.getVerified()==false){
             /*根据用户名查找实名认证信息*/
            RealName realName= realNameRepository.findByLogin(principal.getName());
-           if (realName!=null){
+           if (realName!=null&&realName.getState()==null){
                verifiedResult="您的实名认证信息正在被后台审合同,请耐心等候";
-           }else {
-               verifiedResult="未实名认证，点击进行实名认证";
+           }else if (realName!=null&&realName.getState().equals("不通过")){
+               verifiedResult="实名认证未通过";
+           }else if (realName==null){
+               verifiedResult="还未进行实名认证";
            }
             isVerfied=false;
         }else {
