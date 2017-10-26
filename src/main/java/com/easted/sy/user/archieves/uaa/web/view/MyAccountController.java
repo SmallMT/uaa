@@ -1,6 +1,7 @@
 package com.easted.sy.user.archieves.uaa.web.view;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.easted.sy.user.archieves.uaa.domain.BindAgent;
 import com.easted.sy.user.archieves.uaa.domain.BindEnterprise;
@@ -85,9 +86,9 @@ public class MyAccountController {
         RealName realName = realNameRepository.findByLogin(principal.getName());
 
         if (!model.containsAttribute("realNameVM")) {
-            RealNameVM realNameVM=new RealNameVM();
-            if (realName!=null){
-                if ("不通过".equals(realName.getState())){
+            RealNameVM realNameVM = new RealNameVM();
+            if (realName != null) {
+                if ("不通过".equals(realName.getState())) {
                     realNameVM.setId(realName.getId());
                 }
             }
@@ -95,9 +96,9 @@ public class MyAccountController {
         }
 
         if (realName != null) {
-            model.addAttribute("state",realName.getState()==null?"未审核":realName.getState());//不通过、通过、未审核
-        }else {
-            model.addAttribute("state","未提交");//未提交
+            model.addAttribute("state", realName.getState() == null ? "未审核" : realName.getState());//不通过、通过、未审核
+        } else {
+            model.addAttribute("state", "未提交");//未提交
 
         }
 
@@ -308,7 +309,7 @@ public class MyAccountController {
 
         //如果没有实名认证
         User user = userRepository.findOneByLogin(principal.getName()).get();
-        String creditcode,ename;
+        String creditcode, ename;
         if (!user.isVerified()) {
             redirectAttributes.addFlashAttribute("result", "您还没有进行实名认证");
             return "redirect:/myAccount/bindEnterprise";
@@ -334,35 +335,37 @@ public class MyAccountController {
             Response response = client.newCall(request).execute();
 
             String responseBody = response.body().string();
-            JSONObject jsonObject= com.alibaba.fastjson.JSON.parseObject(responseBody);
-            creditcode=jsonObject.getString("creditcode");
-            ename=jsonObject.getString("ename");
+            JSONObject jsonObject = com.alibaba.fastjson.JSON.parseObject(responseBody);
+            JSONArray jsonArray = jsonObject.getJSONArray("legalperinfos");
 
-            if (creditcode==null){
-                redirectAttributes.addFlashAttribute("result", "没有找到和你相关的企业");
-                return "redirect:/myAccount/bindEnterprise";
-            }else if (ename.equals(bindEnterpriseVM.getEnterpriseName())){
-                redirectAttributes.addFlashAttribute("result", "企业名称不匹配");
-                return "redirect:/myAccount/bindEnterprise";
-            }else if (creditcode.equals(bindEnterpriseVM.getCreditCode())){
-                redirectAttributes.addFlashAttribute("result", "统一社会信用代码不匹配");
+            if (jsonArray.size() != 0) {
+                for (int i = 0; i < jsonArray.size(); i++) {
+                    JSONObject item = jsonArray.getJSONObject(i);
+                    creditcode = item.getString("creditcode");
+                    ename = item.getString("ename");
+                    /*如果已经绑定*/
+                    BindEnterprise bindedEnterprise = bindEnterpriseRepository.findBindEnterpriseByUserAndCreditCode(user, creditcode);
+                    if (bindedEnterprise == null) {
+                        // 将信息填写到数据库中
+                        BindEnterprise bindEnterprise = new BindEnterprise();
+                        bindEnterprise.setCreditCode(bindEnterpriseVM.getCreditCode());
+                        bindEnterprise.setEnterpriseName(bindEnterpriseVM.getEnterpriseName());
+                        bindEnterprise.setUser(userRepository.findOneByLogin(principal.getName()).get());
+                        bindEnterpriseRepository.save(bindEnterprise);
+                        redirectAttributes.addFlashAttribute("result", "绑定成功");
+                        return "redirect:/myAccount/bindEnterprise";
+                    } else {
+                        redirectAttributes.addFlashAttribute("result", "该企业已经被绑定，不能重复绑定");
+                        return "redirect:/myAccount/bindEnterprise";
+                    }
+                }
+
+            } else {
+                redirectAttributes.addFlashAttribute("result", "系统未检测到您的企业信息");
                 return "redirect:/myAccount/bindEnterprise";
             }
-
         }
-
-        // 将信息填写到数据库中
-        BindEnterprise bindEnterprise = new BindEnterprise();
-        bindEnterprise.setCreditCode(bindEnterpriseVM.getCreditCode());
-        bindEnterprise.setEnterpriseName(bindEnterpriseVM.getEnterpriseName());
-        /*设置法人*/
-        bindEnterprise.setUser(userRepository.findOneByLogin(principal.getName()).get());
-
-        bindEnterpriseRepository.save(bindEnterprise);
-//        userRepository.setMyEnterprise(principal.getName(), bindEnterpriseVM.getEnterpriseName(), bindEnterpriseVM.getCreditCode(), true);
-        redirectAttributes.addFlashAttribute("result", "绑定成功");
         return "redirect:/myAccount/bindEnterprise";
-
     }
 
 
@@ -392,7 +395,8 @@ public class MyAccountController {
      */
     @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}/binded/processUnBindAgent", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity processUnBindAgent(@org.springframework.web.bind.annotation.RequestBody Map map, @PathVariable("creditCode") String creditCode, Model model) {
+    public ResponseEntity processUnBindAgent(@org.springframework.web.bind.annotation.RequestBody Map
+                                                 map, @PathVariable("creditCode") String creditCode, Model model) {
         Integer id = Integer.parseInt(map.get("id").toString());
         model.addAttribute("creditCode", creditCode);
         bindAgentRepository.delete(id);
@@ -406,7 +410,8 @@ public class MyAccountController {
      * @return
      */
     @RequestMapping(value = "/processBindAgent", method = RequestMethod.POST)
-    public String processBindAgent(Principal principal, @Valid @ModelAttribute(name = "bindAgentVM") BindAgentVM bindAgentVM, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String processBindAgent(Principal principal, @Valid @ModelAttribute(name = "bindAgentVM") BindAgentVM
+        bindAgentVM, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         /*如果有错误，返回添加页面*/
         if (bindingResult.hasErrors()) {

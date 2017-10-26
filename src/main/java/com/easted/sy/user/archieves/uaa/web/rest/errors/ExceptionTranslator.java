@@ -111,23 +111,23 @@ public class ExceptionTranslator {
         return new ErrorVM(ErrorConstants.ERR_METHOD_NOT_SUPPORTED, exception.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorVM> processException(Exception ex) {
-        if (log.isDebugEnabled()) {
-            log.debug("An unexpected error occurred: {}", ex.getMessage(), ex);
-        } else {
-            log.error("An unexpected error occurred: {}", ex.getMessage());
-        }
-        BodyBuilder builder;
-        ErrorVM errorVM;
-        ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
-        if (responseStatus != null) {
-            builder = ResponseEntity.status(responseStatus.value());
-            errorVM = new ErrorVM("error." + responseStatus.value().value(), responseStatus.reason());
-        } else {
-            builder = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
-            errorVM = new ErrorVM(ErrorConstants.ERR_INTERNAL_SERVER_ERROR, "Internal server error");
-        }
-        return builder.body(errorVM);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorVM> processException(Exception ex) {
+//        if (log.isDebugEnabled()) {
+//            log.debug("An unexpected error occurred: {}", ex.getMessage(), ex);
+//        } else {
+//            log.error("An unexpected error occurred: {}", ex.getMessage());
+//        }
+//        BodyBuilder builder;
+//        ErrorVM errorVM;
+//        ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
+//        if (responseStatus != null) {
+//            builder = ResponseEntity.status(responseStatus.value());
+//            errorVM = new ErrorVM("error." + responseStatus.value().value(), responseStatus.reason());
+//        } else {
+//            builder = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+//            errorVM = new ErrorVM(ErrorConstants.ERR_INTERNAL_SERVER_ERROR, "Internal server error");
+//        }
+//        return builder.body(errorVM);
+//    }
 }
