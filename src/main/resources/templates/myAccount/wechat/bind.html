@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>绑定微信</title>
+    <link rel="stylesheet" href="../../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{/myAccount/wechat/bind/{path}(path=${login})}">绑定微信号码</a>
+
+
+    </div>
+
+    <div class="card-panel">
+        <blockquote>绑定微信号</blockquote>
+        <div class="row">
+            <div class="col s4 offset-s4">
+                <img th:if="${weichat}==null" src="" height="300px" width="300px" th:width="300px" th:src="@{/myAccount/WeChat/bind/qrCode}">
+                <h4 th:if="${weichat}==null" id="binded" class="center-align">已绑定微信</h4>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<!--本页面js-->
+<!--本页面js-->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/jquery.cookie.js}" src="../../static/js/jquery.cookie.js"></script>
+    <script th:src="@{/js/sockjs.min.js}" src="../../../static/js/sockjs.min.js"></script>
+    <script th:src="@{/js/stomp.min.js}" src="../../../static/js/stomp.min.js"></script>
+    <script th:inline="javascript">
+
+        var stompClient = null;
+
+        $(document).ready(function () {
+
+            //连接到websocket
+            connect();
+            debugger
+
+            var wechat=/*[[${wechat}]]*/''
+            if (wechat==null){
+                $('#binded').hide()
+            }
+
+
+        })
+
+//        function setConnected(connected) {
+//            $("#connect").prop("disabled", connected);
+//            $("#disconnect").prop("disabled", !connected);
+//            if (connected) {
+//                $("#conversation").show();
+//            }
+//            else {
+//                $("#conversation").hide();
+//            }
+//            $("#greetings").html("");
+//        }
+
+        function connect() {
+            var socket = new SockJS('/websocket/tracker');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({'X-XSRF-TOKEN': $.cookie('XSRF-TOKEN')}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/wechat', function (greeting) {
+
+                    var result=JSON.parse(greeting.body);
+                    var nickName=result.nikeName;
+                    var binded=result.binded;
+                    debugger
+
+                    if (binded){
+                        //隐藏二维码
+                        $("img").hide();
+                        $('#binded').show()
+
+                        //显示结果
+                    }
+
+                });
+            });
+        }
+
+        function disconnect() {
+            if (stompClient !== null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+        function sendName() {
+            stompClient.send("/topic/wechat", {}, JSON.stringify({'name': $("#name").val()}));
+        }
+
+        function showGreeting(message) {
+            $("#greetings").append("<tr><td>" + message + "</td></tr>");
+        }
+
+        $(function () {
+            $("form").on('submit', function (e) {
+                e.preventDefault();
+            });
+            $( "#connect" ).click(function() { connect(); });
+            $( "#disconnect" ).click(function() { disconnect(); });
+            $( "#send" ).click(function() { sendName(); });
+        });
+
+    </script>
+</th:block>
+</body>
+</html>

@@ -26,12 +26,12 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://199.224.20.211:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: root
-        password: root@123.
-#        url: jdbc:mysql://10.10.139.161:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
+#        url: jdbc:mysql://199.224.20.211:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
 #        username: root
-#        password: 123456
+#        password: root@123.
+        url: jdbc:mysql://10.10.139.161:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 123456
         hikari:
             data-source-properties:
             cachePrepStmts: true
@@ -84,7 +84,7 @@ liquibase:
 #        keyAlias: UAA
 # ===================================================================
 server:
-    port: 9090
+    port: 8080
 
 # ===================================================================
 # JHipster specific properties
@@ -147,3 +147,13 @@ jhipster:
 application:
 realName:
     filePath: /usr/Sword/files
+wechat:
+    mp:
+        appId:  wxe578cd4cea7bcdda
+        secret: 9c28f7e357dfeba071259664ddb3d868
+        token:  lyt1025
+        aesKey:
+
+logging:
+    level:
+        com.github.binarywang.demo.wechat: DEBUG

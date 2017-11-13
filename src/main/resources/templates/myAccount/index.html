@@ -71,7 +71,11 @@
             <div class="col s2 input-field">
                 <a th:if="${name==null}" th:href="@{/myAccount/bindTel}">绑定手机号码</a>
                 <a th:if="${name!=null}" th:href="@{/myAccount/bindTel}">重新绑定手机号码</a>
+            </div>
 
+            <div class="col s4 offset-s3 input-field">
+              <p th:if="${weChat==null}">为了您能够在微信上享受服务，请 <a  th:href="@{/myAccount/WeChat/bind/{path}(path=${login})}">绑定微信</a></p>
+                <!--<a th:if="${weChat!=null}" th:href="@{/myAccount/WeChat/unbind/{path}(path=${login})}">解绑微信</a>-->
             </div>
 
         </div>

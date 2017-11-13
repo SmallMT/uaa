@@ -63,4 +63,14 @@ public interface UserRepository extends JpaRepository<User, Long>,DataTablesRepo
      * @return
      */
     User findUserByIdentity(String identity);
+
+
+    /**
+     * 设置微信的unionId
+     * @param login
+     * @param unionId
+     */
+    @Modifying
+    @Query("update User set weChat=:unionId where login=:login")
+    void setWeChat(@Param("login") String login,@Param("unionId") String unionId);
 }

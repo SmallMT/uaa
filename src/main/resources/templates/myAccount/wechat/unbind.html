@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>解绑微信</title>
+    <link rel="stylesheet" href="../../../static/css/materialize.css" th:href="@{~/css/materialize.min.css}">
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div id="breadcrumbs" class="col s12">
+        当前位置：
+        <a href="#" th:href="@{~/}">主页</a> >
+        <a href="#" th:href="@{/myAccount}">我的账号</a> >
+        <a href="#" th:href="@{/myAccount/wechat/unbind/{path}(path=${login})}">绑定微信号码</a>
+    </div>
+
+    <div class="card-panel">
+        <blockquote>解绑微信</blockquote>
+
+        <div class="row"> </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -69,6 +69,7 @@ public class MyAccountController {
         map.put("name", user.getName());
         map.put("identity", user.getIdentity());
         map.put("tel", user.getTel());
+        map.put("weChat",user.getWeChat());
 
         model.addAllAttributes(map);
         return "myAccount/index";

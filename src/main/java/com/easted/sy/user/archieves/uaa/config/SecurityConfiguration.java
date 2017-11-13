@@ -113,10 +113,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
         http
-            .csrf()
+            .csrf().ignoringAntMatchers("/wechat/portal/**","/websocket/tracker","/topic/**")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
-        .and()
+            .and().headers().frameOptions().sameOrigin().and()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(loginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
@@ -160,6 +160,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/favicon.ico", "/css/**", "/js/**", "/plugins/**", "/fonts/**", "/img/**").permitAll()
             .antMatchers("/randCode","/login","/authentication","/register","/processRegister","/activate","/forgetPassword/**").permitAll()
+            .antMatchers("/wechat/portal/**").permitAll()
             .antMatchers("/clientManagement/clientDetails").authenticated()
             .antMatchers("/realNameManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //实名认证
             .antMatchers("/clientManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //OAuth客户端管理
