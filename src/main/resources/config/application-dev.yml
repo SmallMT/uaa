@@ -16,7 +16,6 @@
 spring:
     profiles:
         active: dev
-        include: swagger
     devtools:
         restart:
             enabled: true
@@ -26,9 +25,11 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
+#  三亚数据库连接信息
 #        url: jdbc:mysql://199.224.20.211:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
 #        username: root
 #        password: root@123.
+# 易迅通数据库连接信息
         url: jdbc:mysql://10.10.139.161:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
         password: 123456
@@ -49,6 +50,7 @@ spring:
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
         hibernate:
           ddl-auto: update
+# 邮件服务器配置
     mail:
         host: smtp.163.com
         username: liuyatao1992@163.com
@@ -147,8 +149,10 @@ jhipster:
 # ===================================================================
 
 application:
+# 实名认证文件路径保存处
 realName:
     filePath: /Users/liuyatao/files
+# 微信账号配置信息
 wechat:
     mp:
         appId:  wxe578cd4cea7bcdda
