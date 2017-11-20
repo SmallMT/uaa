@@ -11,10 +11,7 @@ import com.easted.sy.user.archieves.uaa.repository.BindAgentRepository;
 import com.easted.sy.user.archieves.uaa.repository.BindEnterpriseRepository;
 import com.easted.sy.user.archieves.uaa.repository.RealNameRepository;
 import com.easted.sy.user.archieves.uaa.repository.UserRepository;
-import com.easted.sy.user.archieves.uaa.web.view.vm.BindAgentVM;
-import com.easted.sy.user.archieves.uaa.web.view.vm.BindEnterpriseVM;
-import com.easted.sy.user.archieves.uaa.web.view.vm.RealNameVM;
-import com.easted.sy.user.archieves.uaa.web.view.vm.RegisterVM;
+import com.easted.sy.user.archieves.uaa.web.view.vm.*;
 import okhttp3.*;
 import okhttp3.RequestBody;
 import org.springframework.http.HttpStatus;
@@ -118,6 +115,9 @@ public class MyAccountController {
             model.addAttribute("bindTelResult", user.getTel());
         }
 
+        if (!model.containsAttribute("bindTelVM")) {
+            model.addAttribute("bindTelVM", new BindTelVM());
+        }
         return "myAccount/bindTel";
     }
 
@@ -152,14 +152,19 @@ public class MyAccountController {
             .addHeader("Content-Type", "application/json")
             .build();
 
-        Response response = client.newCall(request).execute();
-        JSONObject json = com.alibaba.fastjson.JSON.parseObject(response.body().string());
+        String bodyString = client.newCall(request).execute().body().string();
+        JSONObject json = com.alibaba.fastjson.JSON.parseObject(bodyString);
         if (json == null) {
             result.put("error", "系统异常");
             result.put("success", false);
         } else if (json.containsKey("error")) {
             result.put("code", "" + json.get("code"));
-            result.put("error", json.getString("error"));
+            if (json.getString("code").equals("601")){
+                result.put("error", "验证码发送请求已超过今日上限");
+            }else {
+                result.put("error", json.getString("error"));
+
+            }
             result.put("success", false);
         } else {
             logger.info("[getcode] 获取短信验证码成功");
@@ -172,28 +177,28 @@ public class MyAccountController {
     /**
      * 短信验证码验证
      *
-     * @param req
+     * @param
      * @return
      * @throws IOException
      */
-
-    @ResponseBody
-    @RequestMapping(value = "/bindTel/verifyCode", method = RequestMethod.POST,
-        consumes = "application/json", produces = "application/json")
-    public Map verifyCode(@org.springframework.web.bind.annotation.RequestBody Map req, Principal principal) throws IOException {
+    @RequestMapping(value = "/bindTel/processVerifyCode", method = RequestMethod.POST)
+    public String verifyCode(Principal principal,@Valid @ModelAttribute(name = "bindTelVM")BindTelVM bindTelVM, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
         logger.info("[verifyCode] 进入方法");
 
-        Map result = new HashMap();
-        String tel = req.get("tel").toString();
-        String code = req.get("code").toString();
+        String msg;
+        if (bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.registerVM", bindingResult);
+            redirectAttributes.addFlashAttribute("bindTelVM",bindTelVM);
+            return "redirect:/myAccount/bindTel/verificationCode";
+        }
 
         //请求地址
-        String url = "https://api.leancloud.cn/1.1/verifySmsCode/" + code;
+        String url = "https://api.leancloud.cn/1.1/verifySmsCode/" + bindTelVM.getCode();
         logger.info("[verifyCode] 验证手机验证码地址为：" + url);
 
 
         JSONObject obj = new JSONObject();
-        obj.put("mobilePhoneNumber", req.get("tel"));
+        obj.put("mobilePhoneNumber", bindTelVM.getTel());
 
         /*http请求*/
         OkHttpClient client = new OkHttpClient();
@@ -212,27 +217,28 @@ public class MyAccountController {
 
         JSONObject json = com.alibaba.fastjson.JSON.parseObject(responseBody);
         if (json == null) {
-            result.put("error", "系统异常");
-            result.put("success", false);
+            msg="绑定失败：系统异常";
         } else if (json.containsKey("error")) {
-            result.put("code", "" + json.get("code"));
-            result.put("error", json.getString("error"));
-            result.put("success", false);
+            msg="绑定失败：系统异常";
         } else {
             logger.info("[verifyCode] 短信验证码正确");
-            result.put("success", true);
+            msg="绑定成功";
 
 
             /*将手机号码写入数据库*/
             User user = userRepository.findOneByLogin(principal.getName()).get();
-            user.setTel(tel);
+            user.setTel(bindTelVM.getTel());
             userRepository.save(user);
 
         }
-        logger.info("[verifyCode] 退出方法");
-        return result;
+
+        redirectAttributes.addFlashAttribute("result",msg);
+        redirectAttributes.addFlashAttribute("bindTelVM",bindTelVM);
+        return "redirect:/myAccount/bindTel";
     }
 
+
+    ////////////////////////////////////////////////////绑定企业///////////////////////////////////////////////////
 
     /**
      * 绑定企业信息页面
@@ -247,47 +253,6 @@ public class MyAccountController {
             model.addAttribute("bindEnterpriseVM", new BindEnterpriseVM());
         }
         return "myAccount/bindEnterprise";
-    }
-
-
-    /**
-     * 查看该用户所绑定的企业
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/bindEnterprise/binded", method = RequestMethod.GET)
-    public String bindedEnterprise(Model model, Principal principal) {
-        User user = userRepository.findOneByLogin(principal.getName()).get();
-
-        List<BindEnterprise> bindEnterpriseList = bindEnterpriseRepository.findBindEnterprisesByUser(user);
-        model.addAttribute("bindEnterpriseList", bindEnterpriseList);
-        return "myAccount/enterpriseBinded";
-    }
-
-
-    /**
-     * 绑定代办人的页面
-     *
-     * @param creditCode
-     * @return
-     */
-    @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}", method = RequestMethod.GET)
-    public String bindAgent(Model model, @PathVariable("creditCode") String creditCode) {
-        if (!model.containsAttribute("bindAgentVM")) {
-            BindAgentVM bindAgentVM = new BindAgentVM();
-            bindAgentVM.setCreditCode(creditCode);
-            model.addAttribute("bindAgentVM", bindAgentVM);
-        }
-        return "myAccount/bindAgent";
-    }
-
-    @RequestMapping(value = "/bindEnterprise/binded/processUnBind", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity processUnBind(@org.springframework.web.bind.annotation.RequestBody Map map) {
-        String creditCode = map.get("creditCode").toString();
-        bindEnterpriseRepository.deleteBindEnterpriseByCreditCode(creditCode);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
 
@@ -328,7 +293,8 @@ public class MyAccountController {
             RequestBody formBody = builder.build();
 
             Request request = new Request.Builder()
-                .url("http://199.224.20.101:8079/legalperinfo")
+               // .url("http://199.224.20.101:8079/legalperinfo")
+                .url("http://10.10.130.81:8079/legalperinfo")
                 .post(formBody)
                 .addHeader("Content-Type", "application/json")
                 .build();
@@ -342,10 +308,11 @@ public class MyAccountController {
             if (jsonArray.size() != 0) {
                 for (int i = 0; i < jsonArray.size(); i++) {
                     JSONObject item = jsonArray.getJSONObject(i);
-                    creditcode = item.getString("creditcode");
-                    ename = item.getString("ename");
-                    /*如果已经绑定*/
+                    creditcode = item.getString("Ecreditcode");
+                    ename = item.getString("Ename");
+                    /*判断当前用户是否已经被绑定*/
                     BindEnterprise bindedEnterprise = bindEnterpriseRepository.findBindEnterpriseByUserAndCreditCode(user, creditcode);
+                    /*当前身份证号码应用的用户没有被绑定到当前企业*/
                     if (bindedEnterprise == null) {
                         // 将信息填写到数据库中
                         BindEnterprise bindEnterprise = new BindEnterprise();
@@ -355,13 +322,13 @@ public class MyAccountController {
                         bindEnterpriseRepository.save(bindEnterprise);
                         redirectAttributes.addFlashAttribute("result", "绑定成功");
                         return "redirect:/myAccount/bindEnterprise";
-                    } else {
+                    } else { //当前身份证号码关联的用户已经被绑定到当前企业
                         redirectAttributes.addFlashAttribute("result", "该企业已经被绑定，不能重复绑定");
                         return "redirect:/myAccount/bindEnterprise";
                     }
                 }
 
-            } else {
+            } else {   //法人对应的身份证号码没有对应的企业信息
                 redirectAttributes.addFlashAttribute("result", "系统未检测到您的企业信息");
                 return "redirect:/myAccount/bindEnterprise";
             }
@@ -369,6 +336,57 @@ public class MyAccountController {
         return "redirect:/myAccount/bindEnterprise";
     }
 
+
+
+    /**
+     * 查看该用户所绑定的企业
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/bindEnterprise/binded", method = RequestMethod.GET)
+    public String bindedEnterprise(Model model, Principal principal) {
+        User user = userRepository.findOneByLogin(principal.getName()).get();
+
+        List<BindEnterprise> bindEnterpriseList = bindEnterpriseRepository.findBindEnterprisesByUser(user);
+        model.addAttribute("bindEnterpriseList", bindEnterpriseList);
+        return "myAccount/enterpriseBinded";
+    }
+
+
+    ////////////////////////////////////////解绑企业/////////////////////////////////////////////////////
+
+    /**
+     * 企业法人解绑已绑定的企业
+     * @param map
+     * @return
+     */
+    @RequestMapping(value = "/bindEnterprise/binded/processUnBind", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity processUnBind(@org.springframework.web.bind.annotation.RequestBody Map map) {
+        String creditCode = map.get("creditCode").toString();
+        bindEnterpriseRepository.deleteBindEnterpriseByCreditCode(creditCode);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    ///////////////////////////////////////////////绑定代办人//////////////////////////////////////////////
+
+    /**
+     * 绑定代办人的页面
+     *
+     * @param creditCode
+     * @return
+     */
+    @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}", method = RequestMethod.GET)
+    public String bindAgent(Model model, @PathVariable("creditCode") String creditCode) {
+        if (!model.containsAttribute("bindAgentVM")) {
+            BindAgentVM bindAgentVM = new BindAgentVM();
+            bindAgentVM.setCreditCode(creditCode);
+            model.addAttribute("bindAgentVM", bindAgentVM);
+        }
+        return "myAccount/bindAgent";
+    }
 
     /**
      * 已绑定办件人的页面
@@ -387,23 +405,6 @@ public class MyAccountController {
 
         return "myAccount/agentBinded";
     }
-
-
-    /**
-     * 处理解绑办件人
-     *
-     * @return
-     */
-    @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}/binded/processUnBindAgent", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity processUnBindAgent(@org.springframework.web.bind.annotation.RequestBody Map
-                                                 map, @PathVariable("creditCode") String creditCode, Model model) {
-        Integer id = Integer.parseInt(map.get("id").toString());
-        model.addAttribute("creditCode", creditCode);
-        bindAgentRepository.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 
     /**
      * 处理绑定办件人
@@ -463,6 +464,24 @@ public class MyAccountController {
         return "redirect:/myAccount/bindEnterprise/binded/bindAgent/" + bindAgentVM.getCreditCode();
 
     }
+
+    ///////////////////////////////////////////////解绑代办人//////////////////////////////////////////////
+
+    /**
+     * 处理解绑办件人
+     *
+     * @return
+     */
+    @RequestMapping(value = "/bindEnterprise/binded/bindAgent/{creditCode}/binded/processUnBindAgent", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity processUnBindAgent(@org.springframework.web.bind.annotation.RequestBody Map
+                                                 map, @PathVariable("creditCode") String creditCode, Model model) {
+        Integer id = Integer.parseInt(map.get("id").toString());
+        model.addAttribute("creditCode", creditCode);
+        bindAgentRepository.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 
 
 }

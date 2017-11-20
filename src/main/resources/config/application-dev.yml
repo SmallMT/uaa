@@ -113,7 +113,9 @@ jhipster:
             key: e0632b1831447033a8a63b9f2d8898d2b3502e45
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: liuyatao1992@163.com
-        base-url: http://199.224.20.102:9090
+#        base-url: http://199.224.20.102:9090
+        base-url: http://127.0.0.1:8080
+
 
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
@@ -146,7 +148,7 @@ jhipster:
 
 application:
 realName:
-    filePath: /usr/Sword/files
+    filePath: /Users/liuyatao/files
 wechat:
     mp:
         appId:  wxe578cd4cea7bcdda

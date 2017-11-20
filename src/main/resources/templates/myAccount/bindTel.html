@@ -21,26 +21,30 @@
 
     <div class="card-panel">
         <blockquote>绑定电话号码</blockquote>
+        <form method="post" th:action="@{/myAccount/bindTel/processVerifyCode}" th:object="${bindTelVM}">
+            <div class="row" id="bind">
+                <div class="col s6 offset-s3 input-field">
+                    <input type="tel" id="tel" placeholder="请输入手机号码" th:field="*{tel}">
+                    <label for="tel">手机号码</label>
+                </div>
 
-        <div class="row" id="bind">
-            <div class="col s6 offset-s3 input-field">
-                <input type="tel" id="tel" placeholder="请输入手机号码">
-                <label for="tel">手机号码</label>
-            </div>
+                <div class="col s3 offset-s3 input-field">
+                    <input type="text" id="verification_code" placeholder="请输入短信验证码" th:field="*{code}">
+                    <label for="verification_code">验证码</label>
+                </div>
 
-            <div class="col s3 offset-s3 input-field">
-                <input type="text" id="verification_code" placeholder="请输入短信验证码">
-                <label for="verification_code">验证码</label>
-            </div>
+                <div class="col s3 input-field">
+                    <button class="btn" type="button" id="getVerficationCode">点击获取手机验证码</button>
+                </div>
 
-            <div class="col s3 input-field">
-                <button class="btn" id="getVerficationCode">点击获取手机验证码</button>
+                <div class="col s6 offset-s3 input-field">
+                    <p th:text="${msg}"></p>
+                </div>
+                <div class="col s6 offset-s3 input-field">
+                    <button class="btn right" id="verifyCode" type="submit">提交</button>
+                </div>
             </div>
-
-            <div class="col s6 offset-s3 input-field">
-                <button class="btn right" id="verifyCode">提交</button>
-            </div>
-        </div>
+        </form>
 
         <div class="row" id="binded">
             <div class="col s6 offset-s3">
@@ -64,13 +68,13 @@
 
             /*检测是否已经绑定手机号码*/
 
-            var bindTelResult=/*[[${bindTelResult}]]*/ '';
+            var bindTelResult = /*[[${bindTelResult}]]*/ '';
 
 
-            if (bindTelResult==null){ //没有绑定
+            if (bindTelResult == null) { //没有绑定
                 $('#bind').show()
                 $('#binded').hide()
-            }else { //已经绑定
+            } else { //已经绑定
                 $('#bind').hide()
                 $('#binded').show()
             }
@@ -83,13 +87,15 @@
             /**
              * 获取验证码
              */
-            $('#getVerficationCode').click(function () {
+            $('#getVerficationCode').click(function (event) {
                 var tel = $('#tel').val();
                 debugger
 
+                //将获取验证码修改为不可点击
+                $('#getVerficationCode').attr('disabled', 'disabled');
                 $.ajax({
                     contentType: 'application/json',
-                    url: /*[[@{/myAccount//bindTel/verificationCode}]]*/ '',
+                    url: /*[[@{/myAccount/bindTel/verificationCode}]]*/ '',
                     type: 'POST',
                     data: JSON.stringify({
                         "tel": tel
@@ -98,8 +104,12 @@
                         request.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
                     },
                     success: function (data) {
-                        console.info(data)
-                        layer.msg('已发送')
+                        if (data.success) {
+                            layer.msg('发送成功')
+                            showTime(10)
+                        } else {
+                            layer.msg('发送失败' + data.error)
+                        }
                     },
 
                     error: function (data) {
@@ -110,39 +120,52 @@
                 })
             })
 
-            /**
-             * 验证验证码
-             */
+            function showTime(count) {
+                $('#getVerficationCode').text((count) + '秒后可重新获取');
+                if (count == 0) {
+                    $('#getVerficationCode').removeAttr('disabled')
+                    $('#getVerficationCode').text('点击获取手机验证码');
+                } else {
+                    count -= 1;
+                    setTimeout(function () {
+                        showTime(count);
+                    }, 1000);
+                }
 
-            $('#verifyCode').click(function () {
-                var tel = $('#tel').val()
-                var code = $('#verification_code').val()
-
-                $.ajax({
-                    contentType:'application/json',
-                    url:/*[[@{/myAccount//bindTel/verifyCode}]]*/ '',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        "tel": tel,
-                        "code":code
-                    }),
-                    beforeSend: function (request) {
-                        request.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
-                    },
-                    success: function (data) {
-                        console.info(data)
-                        if (data.success){
-                            layer.msg('绑定成功')
-                        }else {
-                            layer.msg('绑定失败'+data.error)
-                        }
-                    },
-
-                    error: function (data) {
-                        layer.msg('绑定失败')
-                    }
-                })
-            })
+            }
+//            /**
+//             * 验证验证码
+//             */
+//
+//            $('#verifyCode').click(function () {
+//                var tel = $('#tel').val()
+//                var code = $('#verification_code').val()
+//
+//                $.ajax({
+//                    contentType:'application/json',
+//                    url:/*[[@{/myAccount/bindTel/verifyCode}]]*/ '',
+//                    type: 'POST',
+//                    data: JSON.stringify({
+//                        "tel": tel,
+//                        "code":code
+//                    }),
+//                    beforeSend: function (request) {
+//                        request.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
+//                    },
+//                    success: function (data) {
+//                        console.info(data)
+//                        if (data.success){
+//                            layer.msg('绑定成功')
+//                        }else {
+//                            layer.msg('绑定失败：'+data.error)
+//                        }
+//                    },
+//
+//                    error: function (data) {
+//                        layer.msg('绑定失败')
+//                    }
+//                })
+//            })
 
         })
     </script>

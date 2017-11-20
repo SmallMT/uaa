@@ -17,6 +17,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * 扫描二维码事件
@@ -29,6 +32,8 @@ public class ScanHandler extends AbstractHandler implements ApplicationContextAw
      * 定义Spring上下文对象
      */
     private ApplicationContext m_applicationContext = null;
+
+    private static final Logger LOGGER=Logger.getLogger("ScanHandler");
 
     /*
      * (non-Javadoc)
@@ -50,6 +55,10 @@ public class ScanHandler extends AbstractHandler implements ApplicationContextAw
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context, WxMpService wxMpService, WxSessionManager sessionManager) throws WxErrorException {
 
         WxMpUser userWxInfo = wxMpService.getUserService().userInfo(wxMessage.getFromUser(), null);
+
+        LOGGER.info("微信昵称："+userWxInfo.getNickname()+"\n");
+        LOGGER.info("微信openid："+userWxInfo.getOpenId()+"\n");
+        LOGGER.info("微信unionid："+userWxInfo.getUnionId()+"\n");
 
         /*扫描后获取 unionId*/
         String unionId= userWxInfo.getUnionId();
