@@ -1,3 +1,6 @@
+- [UAA](#uaa)
+    - [如何运行该项目](#%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C%E8%AF%A5%E9%A1%B9%E7%9B%AE)
+    - [数据库表结构](#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84)
 # UAA
     本应用提供用户三亚市政务中心用户账号和授权（User Account and Authentication,简称UAA）的服务.
 ## 如何运行该项目
