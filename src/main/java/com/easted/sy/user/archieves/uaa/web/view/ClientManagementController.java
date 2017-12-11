@@ -123,7 +123,6 @@ public class ClientManagementController {
             redirectAttributes.addFlashAttribute("clientDetails", clientDetails);
             return "redirect:/clientManagement/edit/"+clientDetails.getId();
         }
-        clientDetails.setAppSecret(RandomStringUtils.randomAlphanumeric(20));
         clientDetailsRepository.save(clientDetails);
 
         redirectAttributes.addFlashAttribute("clientDetails", clientDetails);

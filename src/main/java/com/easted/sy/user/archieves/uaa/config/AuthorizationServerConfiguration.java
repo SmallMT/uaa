@@ -65,7 +65,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         tokenServices.setTokenStore(endpoints.getTokenStore());
         tokenServices.setTokenEnhancer(accessTokenConverter());
         tokenServices.setSupportRefreshToken(true);
-        tokenServices.setAccessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS);
+ //       tokenServices.setAccessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS);
 
         return tokenServices;
 	}
@@ -103,6 +103,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                     baseClientDetails.setAutoApproveScopes(Arrays.asList(autoApproveScopes.split(",")));
 
                 }
+                baseClientDetails.setRefreshTokenValiditySeconds(clientDetails.getRefreshTokenValidity());
+                baseClientDetails.setAccessTokenValiditySeconds(clientDetails.getAccessTokenValidity());
                 return baseClientDetails;
             }
         };

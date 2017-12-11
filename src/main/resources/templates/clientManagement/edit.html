@@ -53,6 +53,17 @@
                 <p class="text-danger" th:text="${result}"></p>
             </div>
 
+            <!--密码-->
+
+            <div class="form-group">
+                <label for="appSecret">appSecret/应用密码</label>
+                <input id="appSecret" type="text" th:field="*{appSecret}" class="form-control">
+            </div>
+
+            <div class="col s12" th:if="${#fields.hasErrors('appSecret')}">
+                <p class="text-danger" th:errors="*{appSecret}"></p>
+            </div>
+
 
             <div class="form-group">
                 <label for="grantTypes" class="active">grantTypes/授权类型</label>
@@ -109,7 +120,7 @@
 
 
             <div class="form-group">
-                <label for="access_token_validity">access_token_validity/access token有效时间（ms）</label>
+                <label for="access_token_validity">access_token_validity/access token有效时间（秒）</label>
                 <input id="access_token_validity" class="form-control" type="number" th:field="*{accessTokenValidity}">
             </div>
             <div class="col s12" th:if="${#fields.hasErrors('accessTokenValidity')}">
@@ -118,7 +129,7 @@
 
 
             <div class="form-group">
-                <label for="refresh_token_validity">refresh_token_validity/refresh token有效时间（ms）</label>
+                <label for="refresh_token_validity">refresh_token_validity/refresh token有效时间（秒）</label>
                 <input id="refresh_token_validity" class="form-control" type="number"
                        th:field="*{refreshTokenValidity}">
             </div>

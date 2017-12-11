@@ -30,9 +30,9 @@ spring:
 #        username: root
 #        password: root@123.
 # 易迅通数据库连接信息
-        url: jdbc:mysql://10.10.139.161:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://10.10.139.90:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
-        password: 123456
+        password: root
         hikari:
             data-source-properties:
             cachePrepStmts: true

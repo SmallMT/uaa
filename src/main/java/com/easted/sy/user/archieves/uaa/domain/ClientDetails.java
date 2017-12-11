@@ -62,6 +62,7 @@ public class ClientDetails {
     @Basic
     @JsonView(DataTablesOutput.View.class)
     @Column(name = "appSecret")
+    @NotNull(message = "appSecret/应用密码不能为空")
     public String getAppSecret() {
         return appSecret;
     }
@@ -117,7 +118,7 @@ public class ClientDetails {
         this.authorities = authorities;
     }
 
-    @NotNull(message = "access_token_validity/access token有效时间（ms）不能为空")
+    @NotNull(message = "access_token_validity/access token有效时间（秒）不能为空")
     @Basic
     @Column(name = "access_token_validity")
     @JsonView(DataTablesOutput.View.class)
@@ -130,7 +131,7 @@ public class ClientDetails {
     }
 
     @Basic
-    @NotNull(message = "refresh_token_validity/refresh token有效时间（ms）不能为空")
+    @NotNull(message = "refresh_token_validity/refresh token有效时间（秒）不能为空")
     @Column(name = "refresh_token_validity")
     @JsonView(DataTablesOutput.View.class)
     public Integer getRefreshTokenValidity() {

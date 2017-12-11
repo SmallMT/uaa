@@ -1,9 +1,22 @@
-- [UAA](#uaa)
-    - [如何运行该项目](#%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C%E8%AF%A5%E9%A1%B9%E7%9B%AE)
-    - [数据库表结构](#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84)
-# UAA
-    本应用提供用户三亚市政务中心用户账号和授权（User Account and Authentication,简称UAA）的服务.
-## 如何运行该项目
+<!-- TOC -->
+
+- [1. 如何运行该项目](#1-%E5%A6%82%E4%BD%95%E8%BF%90%E8%A1%8C%E8%AF%A5%E9%A1%B9%E7%9B%AE%08)
+    - [1.1. UAA](#11-uaa)
+    - [1.2. OAuthRS](#12-oauthrs)
+    - [1.3. OAuthClientSample](#13-oauthclientsample)
+- [2. 数据库表结构](#2-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84)
+    - [2.1. client_details(OAuth Client信息表)](#21-clientdetailsoauth-client%E4%BF%A1%E6%81%AF%E8%A1%A8)
+    - [2.2. jhi_user(用户表)](#22-jhiuser%E7%94%A8%E6%88%B7%E8%A1%A8)
+    - [2.3. jhi_authority(权限表)](#23-jhiauthority%E6%9D%83%E9%99%90%E8%A1%A8)
+    - [2.4. jhi_user_authority(用户权限多对多中间表)](#24-jhiuserauthority%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E5%A4%9A%E5%AF%B9%E5%A4%9A%E4%B8%AD%E9%97%B4%E8%A1%A8)
+    - [2.5. real_name(实名认证表)](#25-realname%E5%AE%9E%E5%90%8D%E8%AE%A4%E8%AF%81%E8%A1%A8)
+    - [2.6. bind_enterprise(绑定企业)](#26-bindenterprise%E7%BB%91%E5%AE%9A%E4%BC%81%E4%B8%9A)
+    - [2.7. bind_agent(绑定代办人)](#27-%08bindagent%E7%BB%91%E5%AE%9A%E4%BB%A3%E5%8A%9E%E4%BA%BA)
+
+<!-- /TOC -->
+# 1. 如何运行该项目
+
+## 1.1. UAA
 
 1. clone该项目`git clone https://gitee.com/liuyatao1992/SY-UAA.git`
 2. 数据库配置信息位于`./src/main/resources/config/application-dev.yml`中的`spring.datasource`中
@@ -19,9 +32,16 @@
     * 注册微信开发测试账号，并将配置信息填写在`./src/main/resources/config/application-dev.yml`中的`wechat.mp`中
 8. 运行项目：直接运行`UaaApp`中的main函数，或者使用spring boot的maven插件`mvn spring-boot:run`
 
-## 数据库表结构
+## 1.2. OAuthRS
+> 资源服务器
 
-1. client_details(OAuth Client信息表)
+## 1.3. OAuthClientSample
+> Spring Security OAuth 2.0提供的客户端访问OAuth2.0 Server的实现
+
+
+# 2. 数据库表结构
+
+## 2.1. client_details(OAuth Client信息表)
 
 | 字段 | 说明 |备注 |
 | --- | --- | -- |
@@ -37,7 +57,7 @@
 |resource_ids|资源id|
 |auth_approve_scopes|自动授权请求域|
 
-2. jhi_user(用户表)
+## 2.2. jhi_user(用户表)
 
 |字段|说明|备注|
 | --- | -- | -- |
@@ -64,20 +84,20 @@
 |credit_code|同一信用代码|作废|
 |is_legal_person|是否是法人|作废|
 
-3. jhi_authority(权限表)
+## 2.3. jhi_authority(权限表)
 
 |字段|说明|备注|
 | --- | -- | -- |
 |name|权限名称|主键|
 
-4. jhi_user_authority(用户权限多对多中间表)
+## 2.4. jhi_user_authority(用户权限多对多中间表)
 
 |字段|说明|备注|
 | --- | -- | -- |
 |user_id|user表的主键|主键|
 |authority_name|authority表的主键|主键|
 
-5. real_name(实名认证表)
+## 2.5. real_name(实名认证表)
 
 |字段|说明|备注|
 | --- | -- | -- |
@@ -91,7 +111,7 @@
 |identity|身份证号码|
 |state|状态|
 
-6. bind_enterprise(绑定企业)
+## 2.6. bind_enterprise(绑定企业)
 
 |字段|说明|备注|
 | --- | -- | -- |
@@ -100,7 +120,7 @@
 |credit_code|统一社会信用代码|
 |user_id|user表主键|外键|
 
-7. bind_agent(绑定代办人)
+## 2.7. bind_agent(绑定代办人)
 
 |字段|说明|备注|
 | --- | -- | -- |
