@@ -62,7 +62,6 @@ public class ClientDetails {
     @Basic
     @JsonView(DataTablesOutput.View.class)
     @Column(name = "appSecret")
-    @NotNull(message = "appSecret/应用密码不能为空")
     public String getAppSecret() {
         return appSecret;
     }
