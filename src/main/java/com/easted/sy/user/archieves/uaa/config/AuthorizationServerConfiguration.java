@@ -65,6 +65,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         tokenServices.setTokenStore(endpoints.getTokenStore());
         tokenServices.setTokenEnhancer(accessTokenConverter());
         tokenServices.setSupportRefreshToken(true);
+        tokenServices.setReuseRefreshToken(false);
  //       tokenServices.setAccessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS);
 
         return tokenServices;
@@ -83,9 +84,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	{
 		endpoints
 			.authenticationManager(authenticationManager)
-		//	.userDetailsService(userDetailsService)
-			.tokenServices(tokenServices(endpoints));
-//			.accessTokenConverter(accessTokenConverter());
+//			.userDetailsService(userDetailsService)
+			.tokenServices(tokenServices(endpoints))
+			.accessTokenConverter(accessTokenConverter())
+            .reuseRefreshTokens(false);
 	}
 
 	@Bean
