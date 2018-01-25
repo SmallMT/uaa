@@ -30,7 +30,7 @@ spring:
 #        username: root
 #        password: root@123.
 # 易迅通数据库连接信息
-        url: jdbc:mysql://10.10.139.90:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://localhost:3306/uaa?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
         password: root
         hikari:
@@ -61,6 +61,7 @@ spring:
             mail.smtp.starttls.required: true
     messages:
         cache-seconds: 1
+
     thymeleaf:
         cache: false
         mode: LEGACYHTML5

@@ -12,6 +12,11 @@ public class BindEnterprise {
 
     private User user;
 
+    private String businessLicense;
+
+    private String state;
+
+    private Boolean isLegalPerson;
 
     private List<BindAgent> bindAgentList;
 
@@ -63,6 +68,35 @@ public class BindEnterprise {
 
     public void setBindAgentList(List<BindAgent> bindAgentList) {
         this.bindAgentList = bindAgentList;
+    }
+
+    @Basic
+    @Column(name = "business_license")
+    public String getBusinessLicense() {
+        return businessLicense;
+    }
+
+    public void setBusinessLicense(String businessLicense) {
+        this.businessLicense = businessLicense;
+    }
+
+    @Basic
+    @Column(name = "state")
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    @Column(name = "is_legalPerson")
+    public Boolean getLegalPerson() {
+        return isLegalPerson;
+    }
+
+    public void setLegalPerson(Boolean legalPerson) {
+        isLegalPerson = legalPerson;
     }
 
     @Override

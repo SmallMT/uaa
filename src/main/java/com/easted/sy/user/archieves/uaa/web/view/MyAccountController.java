@@ -319,6 +319,8 @@ public class MyAccountController {
                         bindEnterprise.setCreditCode(bindEnterpriseVM.getCreditCode());
                         bindEnterprise.setEnterpriseName(bindEnterpriseVM.getEnterpriseName());
                         bindEnterprise.setUser(userRepository.findOneByLogin(principal.getName()).get());
+                        bindedEnterprise.setState("已验证");
+                        bindedEnterprise.setLegalPerson(true);
                         bindEnterpriseRepository.save(bindEnterprise);
                         redirectAttributes.addFlashAttribute("result", "绑定成功");
                         return "redirect:/myAccount/bindEnterprise";
@@ -329,7 +331,15 @@ public class MyAccountController {
                 }
 
             } else {   //法人对应的身份证号码没有对应的企业信息
-                redirectAttributes.addFlashAttribute("result", "系统未检测到您的企业信息");
+                //
+                BindEnterprise bindEnterprise=new BindEnterprise();
+
+                bindEnterprise.setCreditCode(bindEnterpriseVM.getCreditCode());
+                bindEnterprise.setEnterpriseName(bindEnterpriseVM.getEnterpriseName());
+                bindEnterprise.setUser(userRepository.findOneByLogin(principal.getName()).get());
+                bindEnterprise.setState("未验证");
+                bindEnterpriseRepository.save(bindEnterprise);
+                redirectAttributes.addFlashAttribute("result", "添加成功，绑定信息待认证");
                 return "redirect:/myAccount/bindEnterprise";
             }
         }

@@ -161,6 +161,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/favicon.ico", "/css/**", "/js/**", "/plugins/**", "/fonts/**", "/img/**").permitAll()
             .antMatchers("/randCode","/login","/authentication","/register","/processRegister","/activate","/forgetPassword/**").permitAll()
             .antMatchers("/wechat/portal/**").permitAll()
+            .antMatchers("/oauth/token").permitAll()
             .antMatchers("/clientManagement/clientDetails").authenticated()
             .antMatchers("/realNameManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //实名认证
             .antMatchers("/clientManagement/**").hasAuthority(AuthoritiesConstants.ADMIN) //OAuth客户端管理
